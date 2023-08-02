@@ -1,7 +1,10 @@
 package user;
 
 import java.text.DecimalFormat;
+import java.time.LocalDateTime;
 import java.time.LocalTime;
+import java.time.format.DateTimeFormatter;
+import java.time.temporal.TemporalField;
 import java.util.ArrayList;
 
 public class User {
@@ -85,10 +88,11 @@ public class User {
         ArrayList result = new ArrayList<>();
         int workDays = 0;
 //        LocalTime wageWorkTimesMonth = LocalTime.of(0, 0);
-        LocalTime elaborTimes = LocalTime.of(0, 0);
+        LocalDateTime elaborTimes = LocalDateTime.of(1,1,1, 0,0);
         LocalTime workTime = LocalTime.of(9, 0);
         double wageElabors = 0.0;
         double wage = 0.0;
+        DecimalFormat df = new DecimalFormat("#.##");
 
         for (Object time : this.workTimes) {
             if (Double.valueOf(time.toString()) > 9) {
@@ -97,21 +101,40 @@ public class User {
                 String tempTime = (String) time;
                 int houer = Integer.parseInt((tempTime.substring(0, ((String) time).indexOf("."))));
                 int minute = Integer.parseInt(tempTime.substring(tempTime.indexOf(".") + 1, tempTime.length()));
-                LocalTime tempWorkTime = LocalTime.of(houer, minute);
-                LocalTime resultTime = tempWorkTime.minusHours(workTime.getHour()).minusMinutes(workTime.getMinute());
+                LocalDateTime tempWorkTime = LocalDateTime.of(1,1, 1, houer, minute);
+                LocalDateTime resultTime = tempWorkTime.minusHours(workTime.getHour()).minusMinutes(workTime.getMinute());
                 elaborTimes = elaborTimes.plusHours(resultTime.getHour()).plusMinutes(resultTime.getMinute());
-//                нужно достать время переработки перевести в дабл и умножить на пэйперхауер и добавить в вагеелабор
-
             } else if (Double.valueOf(time.toString()) <= 9 && Double.valueOf(time.toString()) > 1) {
                 workDays++;
+                String tempTime = (String) time;
+                int houer = Integer.parseInt((tempTime.substring(0, ((String) time).indexOf("."))));
+                int minute = Integer.parseInt(tempTime.substring(tempTime.indexOf(".") + 1, tempTime.length()));
+                LocalTime tempWorkTime = LocalTime.of(houer, minute);
+                tempWorkTime = tempWorkTime.minusHours(1);
+                double paymentForHouer = this.paymentPerDay/8;
+                wage = wage + (Double.valueOf(tempWorkTime.format(DateTimeFormatter.ofPattern("H.mm")))*paymentForHouer);
+
 
             }
 
             }
+        elaborTimes = elaborTimes.minusDays(1);
+        String a = String.valueOf(elaborTimes.getMinute());
+        double elaborTimesSum = (double)elaborTimes.getDayOfMonth()*24 + (double)elaborTimes.getHour();
+        String elaborTimeSumMinute = (elaborTimesSum) + a;
+        System.out.println(elaborTimeSumMinute);
 
-//        DecimalFormat df = new DecimalFormat("#.##");
-//        double fullWage = wageWorkTimesMonth+wageElabors;
-//        fullWage = Double.parseDouble(String.valueOf(fullWage));
+        wageElabors = wageElabors + (elaborTimesSum * this.paymentPerHour);
+
+        double fullWage = wage+wageElabors;
+        fullWage = Double.parseDouble(String.valueOf(fullWage));
+        System.out.println(this.name);
+        System.out.println("Отработал - " + workDays + " д.");
+//        System.out.println("Перерработал - " + elaborTime + " ч.");
+        System.out.println("Заработал - " + wage + " р.");
+        System.out.println("Заработал за переработку - " + (df.format(wageElabors)) + " р.");
+        System.out.println("Итого - " + fullWage + " р.");
+
 //        elaborTimes = Double.parseDouble(String.valueOf(elaborTimes).replace(",","."));
 //        wageWorkTimesMonth = Double.parseDouble(String.valueOf(wageWorkTimesMonth).replace(",","."));
 //        wageElabors = Double.parseDouble(String.valueOf(wageElabors).replace(",","."));
@@ -121,7 +144,7 @@ public class User {
 //                        "\n----------------------\n", this.name, workDays, df.format(elaborTimes),
 //                df.format(wageWorkTimesMonth), df.format(wageElabors), df.format(fullWage));
         }
-    }
+
 
 
         @Override
