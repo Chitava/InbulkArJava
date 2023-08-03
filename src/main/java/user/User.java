@@ -34,7 +34,7 @@ public class User {
         this.name = name;
     }
 
-    public ArrayList getMonthTimes() {
+    public ArrayList getMonthStat() {
         return this.monthStat;
     }
 
@@ -71,37 +71,21 @@ public class User {
         this.paymentPerHour = paymentPerHour;
     }
 
-
-    public int quantityOfWorkDays() {
-        int count = 0;
-        for (int i = 0; i < this.workTimes.size(); i++) {
-            if (workTimes.get(i).equals("0")) {
-                continue;
-            } else {
-                count++;
-            }
-        }
-        return count;
-    }
-
-    public void monthStat(ArrayList monthTimes) {
-        ArrayList result = new ArrayList<>();
+    public String monthStat() {
         int workDays = 0;
-//        LocalTime wageWorkTimesMonth = LocalTime.of(0, 0);
-        LocalDateTime elaborTimes = LocalDateTime.of(1,1,1, 0,0);
+        LocalDateTime elaborTimes = LocalDateTime.of(1, 1, 1, 0, 0);
         LocalTime workTime = LocalTime.of(9, 0);
         double wageElabors = 0.0;
         double wage = 0.0;
         DecimalFormat df = new DecimalFormat("#.##");
-
         for (Object time : this.workTimes) {
             if (Double.valueOf(time.toString()) > 9) {
                 workDays++;
-                wage = wage +this.paymentPerDay;
+                wage = wage + this.paymentPerDay;
                 String tempTime = (String) time;
                 int houer = Integer.parseInt((tempTime.substring(0, ((String) time).indexOf("."))));
                 int minute = Integer.parseInt(tempTime.substring(tempTime.indexOf(".") + 1, tempTime.length()));
-                LocalDateTime tempWorkTime = LocalDateTime.of(1,1, 1, houer, minute);
+                LocalDateTime tempWorkTime = LocalDateTime.of(1, 1, 1, houer, minute);
                 LocalDateTime resultTime = tempWorkTime.minusHours(workTime.getHour()).minusMinutes(workTime.getMinute());
                 elaborTimes = elaborTimes.plusHours(resultTime.getHour()).plusMinutes(resultTime.getMinute());
             } else if (Double.valueOf(time.toString()) <= 9 && Double.valueOf(time.toString()) > 1) {
@@ -111,46 +95,31 @@ public class User {
                 int minute = Integer.parseInt(tempTime.substring(tempTime.indexOf(".") + 1, tempTime.length()));
                 LocalTime tempWorkTime = LocalTime.of(houer, minute);
                 tempWorkTime = tempWorkTime.minusHours(1);
-                double paymentForHouer = this.paymentPerDay/8;
-                wage = wage + (Double.valueOf(tempWorkTime.format(DateTimeFormatter.ofPattern("H.mm")))*paymentForHouer);
-
-
+                double paymentForHouer = this.paymentPerDay / 8;
+                wage = wage + (Double.valueOf(tempWorkTime.format(DateTimeFormatter.ofPattern("H.mm"))) * paymentForHouer);
             }
-
-            }
-        elaborTimes = elaborTimes.minusDays(1);
-        String a = String.valueOf(elaborTimes.getMinute());
-        double elaborTimesSum = (double)elaborTimes.getDayOfMonth()*24 + (double)elaborTimes.getHour();
-        String elaborTimeSumMinute = (elaborTimesSum) + a;
-        System.out.println(elaborTimeSumMinute);
-
-        wageElabors = wageElabors + (elaborTimesSum * this.paymentPerHour);
-
-        double fullWage = wage+wageElabors;
-        fullWage = Double.parseDouble(String.valueOf(fullWage));
-        System.out.println(this.name);
-        System.out.println("Отработал - " + workDays + " д.");
-//        System.out.println("Перерработал - " + elaborTime + " ч.");
-        System.out.println("Заработал - " + wage + " р.");
-        System.out.println("Заработал за переработку - " + (df.format(wageElabors)) + " р.");
-        System.out.println("Итого - " + fullWage + " р.");
-
-//        elaborTimes = Double.parseDouble(String.valueOf(elaborTimes).replace(",","."));
-//        wageWorkTimesMonth = Double.parseDouble(String.valueOf(wageWorkTimesMonth).replace(",","."));
-//        wageElabors = Double.parseDouble(String.valueOf(wageElabors).replace(",","."));
-//        elaborTimes = Double.parseDouble(String.valueOf(elaborTimes).replace(",","."));
-//        System.out.printf("Работник %s\nотработал в этом месяце - %s дней\nПереработка составила - %s часов\n" +
-//                "Зарплата за полные рабочие дни - %s р.\nЗарплата за переработку - %s р.\nИтого за месяц - %s" +
-//                        "\n----------------------\n", this.name, workDays, df.format(elaborTimes),
-//                df.format(wageWorkTimesMonth), df.format(wageElabors), df.format(fullWage));
         }
+        String elaborTime = (String.valueOf((elaborTimes.getDayOfMonth()-1) * 24 + elaborTimes.getHour()) + "." + elaborTimes.getMinute());
+        wageElabors = wageElabors + Double.parseDouble(elaborTime) * this.paymentPerHour;
+        double fullWage = wage + wageElabors;
+        fullWage = Double.parseDouble(String.valueOf(fullWage));
+        setMonthStat(String.valueOf(workDays));
+        setMonthStat(String.valueOf(wage).substring(0, String.valueOf(wage).indexOf(".") + 2));
+        setMonthStat(elaborTime);
+        setMonthStat(String.valueOf(wageElabors).substring(0, String.valueOf(wageElabors).indexOf(".") + 2));
+        setMonthStat(String.valueOf(fullWage).substring(0, String.valueOf(fullWage).indexOf(".") + 2));
+        return String.format("Отработал в этом месяце - %s дней\nЗаработал - %s р.\n" +
+                "Переработка составила - %s ч.\nЗарплата за переработку - %s р.\nИтого за месяц - %s р.",
+                this.monthStat.get(0), this.monthStat.get(1), this.monthStat.get(2),this.monthStat.get(3),
+                this.monthStat.get(4));
+    }
 
 
 
         @Override
         public String toString () {
-            return String.format("Работник - %s  должность - %s\nОтработал в этом месяце - %s дней\nРазмер оплаты работы за день - %s р.\nРазмер почасовой оплаты " +
-                    "переработки - %s р.", this.name, this.post, quantityOfWorkDays(), this.paymentPerDay, this.paymentPerHour);
+            return String.format("Работник - %s\nдолжность - %s\nРазмер оплаты работы за день - %s р.\nРазмер почасовой оплаты " +
+                    "переработки - %s р.", this.name, this.post, this.paymentPerDay, this.paymentPerHour);
         }
     }
 

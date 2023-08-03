@@ -6,9 +6,11 @@ import user.User;
 
 public class main {
     public static void main(String[] args) throws IOException {
-       ArrayList workers = GetWorkTime.setUser("src/main/resources/files/2.xlsx");
+       ArrayList workers = GetWorkTime.setUser("src/main/resources/files/1.xlsx");
         for (User user: User.users) {
-            user.monthStat(user.getMonthTimes());
+            System.out.println(user.toString());
+            System.out.println(user.monthStat());
+            System.out.println("--------------------------");
         }
     }
 }

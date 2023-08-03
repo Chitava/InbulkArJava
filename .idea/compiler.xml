@@ -8,6 +8,7 @@
         <outputRelativeToContentRoot value="true" />
         <module name="InbulkArJava" />
         <module name="InbulkJava" />
+        <module name="ARJava" />
       </profile>
     </annotationProcessing>
   </component>

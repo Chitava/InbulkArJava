@@ -15,7 +15,7 @@ import java.time.LocalTime;
 import java.util.*;
 
 public class GetWorkTime {
-    public static ArrayList setUser(String path) {
+    public static ArrayList setUser(String path) { //Метод добавления сотрудника в базу
         File file = new File(path);
         try (FileInputStream stream = new FileInputStream(file);) {
             XSSFWorkbook wb = new XSSFWorkbook(stream);
@@ -35,10 +35,11 @@ public class GetWorkTime {
                 for (int i = 0; i < lenRow; i++) {
                     Cell cell = cellIterator.next();
                     String value = cell.getStringCellValue();
-
                     try {
                         Integer.parseInt(value);
-                        user = new User(cellIterator.next().getStringCellValue(), "рабочий", 1500.00, 200.00);
+                        user = new User(cellIterator.next().getStringCellValue().replace(" ","")
+                                .replace("\n"," "), "рабочий", 1500.00,
+                                200.00);
                         User.addUser(user);
                     } catch (NumberFormatException e) {
                         if (!value.isBlank()) {
@@ -51,6 +52,7 @@ public class GetWorkTime {
                                                 .replace("--", "0");
                                     }
                                     if (Float.valueOf(tempTime[0]) > Float.valueOf(tempTime[1])) {
+                                        //Если сотрудник пришел сегодня а ушел на следующий день
                                         if (tempTime[1].equals("0")) {
                                             continue;
                                         } else {
@@ -71,7 +73,6 @@ public class GetWorkTime {
                                         }
                                     } else {
                                         user.setWorkTimes(tempTime[2]);
-
                                     }
                                 }
                             }
@@ -79,7 +80,6 @@ public class GetWorkTime {
                     }
                 }
             }
-
         } catch (FileNotFoundException e) {
             throw new RuntimeException(e);
         } catch (IOException e) {
