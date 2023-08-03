@@ -10,12 +10,12 @@ import workers.Worker;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
-import java.io.IOException;
 import java.util.ArrayList;
 
-public class ExcellSender implements SendTo{
+public class ExcellSender implements SendTo {
+
     @Override
-    public void sendTo(String path) throws IOException {
+    public void sendTo(ArrayList<Worker> workers, String path) {
         File file = new File(path);
         String[] nameCol = {"№", "ФИО", "Отработано дней", "Часов переработки", "Зарплата за дни",
                 "Зарплата за переработку", "Зарплата за месяц", "Аванс", "Итого на руки"};
@@ -28,40 +28,40 @@ public class ExcellSender implements SendTo{
                 cell.setCellValue(nameCol[i]);
             }
             book.write(stream);
+        } catch (Exception e) {
+            throw new RuntimeException();
         }
-    }
-
-    @Override
-    public void sendTo(ArrayList<Worker> workers, String path) throws IOException {
         int rowIndex = 1;
         Row row;
         for (Worker worker : workers) {
             File fileRewrite = new File(path);
-            Workbook book = new HSSFWorkbook(new FileInputStream(fileRewrite));
-            Sheet sheet = book.getSheet("Зарплата за месяц");
-            int colIndex = 0;
-            row = sheet.createRow(rowIndex);
-            Cell cell = row.createCell(colIndex);
-            cell.setCellValue(rowIndex);
-            rowIndex++;
-            colIndex++;
-            cell = row.createCell(colIndex);
-            cell.setCellValue(worker.getName());
-            colIndex++;
-            for (int i = 0; i < worker.getSize(); i++) {
-                cell = row.createCell(colIndex);
-                cell.setCellValue((Double.parseDouble((String) worker.getMonthStat().get(i))));
+            try (Workbook book = new HSSFWorkbook(new FileInputStream(fileRewrite))) {
+                Sheet sheet = book.getSheet("Зарплата за месяц");
+                int colIndex = 0;
+                row = sheet.createRow(rowIndex);
+                Cell cell = row.createCell(colIndex);
+                cell.setCellValue(rowIndex);
+                rowIndex++;
                 colIndex++;
+                cell = row.createCell(colIndex);
+                cell.setCellValue(worker.getName());
+                colIndex++;
+                for (int i = 0; i < worker.getSize(); i++) {
+                    cell = row.createCell(colIndex);
+                    cell.setCellValue((Double.parseDouble((String) worker.getMonthStat().get(i))));
+                    colIndex++;
+                }
+                cell = row.createCell(colIndex);
+                cell.setCellValue(0);
+                colIndex++;
+                cell = row.createCell(colIndex);
+                StringBuilder valInsert = new StringBuilder();
+                valInsert.append("=G").append(rowIndex).append("-").append("H").append(rowIndex);
+                cell.setCellValue(valInsert.toString());
+                book.write(new FileOutputStream(fileRewrite));
+            } catch (Exception e) {
+                throw new RuntimeException();
             }
-            cell = row.createCell(colIndex);
-            cell.setCellValue(0);
-            colIndex++;
-            cell = row.createCell(colIndex);
-            StringBuilder valInsert = new StringBuilder();
-            valInsert.append("=G").append(rowIndex).append("-").append("H").append(rowIndex);
-            cell.setCellValue(valInsert.toString());
-            book.write(new FileOutputStream(fileRewrite));
         }
-
     }
 }

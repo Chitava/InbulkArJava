@@ -7,7 +7,12 @@ import java.io.IOException;
 import java.util.ArrayList;
 
 public interface SendTo {
-    public void sendTo(String path) throws IOException;
+    public void sendTo(ArrayList<Worker> worker, String path);
 
-    public void sendTo(ArrayList<Worker> worker, String path) throws IOException;
 }
+//public interface
+//    public void sendTo(ArrayList<Worker> worker, String path);
+//    public void insertWorker (ArrayList<Worker> workers);
+//
+//    void sendToSQL(ArrayList<Worker> workers);
+//}

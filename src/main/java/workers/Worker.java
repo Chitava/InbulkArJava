@@ -18,6 +18,8 @@ import java.util.ArrayList;
 public class Worker{
     private String name;
     private String post;
+
+    private boolean doubleSallary;
     private ArrayList monthStat;
     private ArrayList workTimes;
     private double paymentPerDay;
@@ -52,6 +54,14 @@ public class Worker{
 
     public ArrayList getWorkTimes() {
         return this.workTimes;
+    }
+
+    public String getPost() {
+        return post;
+    }
+
+    public void setPost(String post) {
+        this.post = post;
     }
 
     public void setWorkTimes(String workTime) {
