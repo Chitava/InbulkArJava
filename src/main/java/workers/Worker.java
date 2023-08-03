@@ -1,22 +1,30 @@
-package user;
+package workers;
 
+import interfaces.SendTo;
+import org.apache.poi.hssf.usermodel.HSSFSheet;
+import org.apache.poi.hssf.usermodel.HSSFWorkbook;
+import org.apache.poi.ss.usermodel.Cell;
+import org.apache.poi.ss.usermodel.Row;
+import org.apache.poi.ss.usermodel.Sheet;
+import org.apache.poi.ss.usermodel.Workbook;
+
+import java.io.*;
 import java.text.DecimalFormat;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
-import java.time.temporal.TemporalField;
 import java.util.ArrayList;
 
-public class User {
+public class Worker{
     private String name;
     private String post;
     private ArrayList monthStat;
     private ArrayList workTimes;
     private double paymentPerDay;
     private double paymentPerHour;
-    public static ArrayList<User> users = new ArrayList();
+    public static ArrayList<Worker> users = new ArrayList();
 
-    public User(String name, String post, double paymentPerDay, double paymentPerHour) {
+    public Worker(String name, String post, double paymentPerDay, double paymentPerHour) {
         this.name = name;
         this.post = post;
         this.paymentPerDay = paymentPerDay;
@@ -51,7 +59,7 @@ public class User {
         this.workTimes.add(workTime);
     }
 
-    public static void addUser(User user) {
+    public static void addUser(Worker user) {
         users.add(user);
     }
 
@@ -69,6 +77,10 @@ public class User {
 
     public void setPaymentPerHour(double paymentPerHour) {
         this.paymentPerHour = paymentPerHour;
+    }
+
+    public int getSize() {
+        return this.monthStat.size();
     }
 
     public String monthStat() {
@@ -92,34 +104,35 @@ public class User {
                 workDays++;
                 String tempTime = (String) time;
                 int houer = Integer.parseInt((tempTime.substring(0, ((String) time).indexOf("."))));
-                int minute = Integer.parseInt(tempTime.substring(tempTime.indexOf(".") + 1, tempTime.length()));
+                int minute = Integer.parseInt(tempTime.substring(tempTime.indexOf(".") + 1));
                 LocalTime tempWorkTime = LocalTime.of(houer, minute);
                 tempWorkTime = tempWorkTime.minusHours(1);
                 double paymentForHouer = this.paymentPerDay / 8;
                 wage = wage + (Double.valueOf(tempWorkTime.format(DateTimeFormatter.ofPattern("H.mm"))) * paymentForHouer);
             }
         }
-        String elaborTime = (String.valueOf((elaborTimes.getDayOfMonth()-1) * 24 + elaborTimes.getHour()) + "." + elaborTimes.getMinute());
+        String elaborTime = (String.valueOf((elaborTimes.getDayOfMonth() - 1) * 24 + elaborTimes.getHour()) + "." + elaborTimes.getMinute());
         wageElabors = wageElabors + Double.parseDouble(elaborTime) * this.paymentPerHour;
         double fullWage = wage + wageElabors;
         fullWage = Double.parseDouble(String.valueOf(fullWage));
         setMonthStat(String.valueOf(workDays));
-        setMonthStat(String.valueOf(wage).substring(0, String.valueOf(wage).indexOf(".") + 2));
         setMonthStat(elaborTime);
+        setMonthStat(String.valueOf(wage).substring(0, String.valueOf(wage).indexOf(".") + 2));
         setMonthStat(String.valueOf(wageElabors).substring(0, String.valueOf(wageElabors).indexOf(".") + 2));
         setMonthStat(String.valueOf(fullWage).substring(0, String.valueOf(fullWage).indexOf(".") + 2));
         return String.format("Отработал в этом месяце - %s дней\nЗаработал - %s р.\n" +
-                "Переработка составила - %s ч.\nЗарплата за переработку - %s р.\nИтого за месяц - %s р.",
-                this.monthStat.get(0), this.monthStat.get(1), this.monthStat.get(2),this.monthStat.get(3),
+                        "Переработка составила - %s ч.\nЗарплата за переработку - %s р.\nИтого за месяц - %s р.",
+                this.monthStat.get(0), this.monthStat.get(1), this.monthStat.get(2), this.monthStat.get(3),
                 this.monthStat.get(4));
     }
 
-
-
-        @Override
-        public String toString () {
-            return String.format("Работник - %s\nдолжность - %s\nРазмер оплаты работы за день - %s р.\nРазмер почасовой оплаты " +
-                    "переработки - %s р.", this.name, this.post, this.paymentPerDay, this.paymentPerHour);
-        }
+    @Override
+    public String toString() {
+        return String.format("Работник - %s\nдолжность - %s\nРазмер оплаты работы за день - %s р.\nРазмер почасовой оплаты " +
+                "переработки - %s р.", this.name, this.post, this.paymentPerDay, this.paymentPerHour);
     }
+
+
+}
+
 

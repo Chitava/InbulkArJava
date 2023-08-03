@@ -4,13 +4,12 @@ import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.xssf.usermodel.XSSFSheet;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
-import user.User;
+import workers.Worker;
 
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
-import java.nio.file.Path;
 import java.time.LocalTime;
 import java.util.*;
 
@@ -21,7 +20,7 @@ public class GetWorkTime {
             XSSFWorkbook wb = new XSSFWorkbook(stream);
             XSSFSheet sheet = wb.getSheetAt(0);
             Iterator<Row> itr = sheet.iterator();
-            User user = null;
+            Worker user = null;
             while (itr.hasNext()) {
                 Row row = itr.next();
                 int lenRow = 0;
@@ -37,10 +36,10 @@ public class GetWorkTime {
                     String value = cell.getStringCellValue();
                     try {
                         Integer.parseInt(value);
-                        user = new User(cellIterator.next().getStringCellValue().replace(" ","")
+                        user = new Worker(cellIterator.next().getStringCellValue().replace(" ","")
                                 .replace("\n"," "), "рабочий", 1500.00,
                                 200.00);
-                        User.addUser(user);
+                        Worker.addUser(user);
                     } catch (NumberFormatException e) {
                         if (!value.isBlank()) {
                             if (value.contains(":") || value.contains("--")) {
@@ -85,6 +84,6 @@ public class GetWorkTime {
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
-        return User.users;
+        return Worker.users;
     }
 }
