@@ -1,7 +1,7 @@
 import java.io.IOException;
 import java.util.ArrayList;
 
-import interfaces.Sender;
+import interfaces.ExcellSender;
 import methods.GetWorkTime;
 import workers.Worker;
 
@@ -11,7 +11,7 @@ public class main {
         for (Worker worker: Worker.users) {
             worker.monthStat();
         }
-        Sender excel = new Sender();
+        ExcellSender excel = new ExcellSender();
         excel.sendTo("./Excel.xls");
         excel.sendTo(workers, "./Excel.xls");
         }

@@ -13,7 +13,7 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.ArrayList;
 
-public class Sender implements SendTo{
+public class ExcellSender implements SendTo{
     @Override
     public void sendTo(String path) throws IOException {
         File file = new File(path);
