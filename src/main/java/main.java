@@ -9,16 +9,8 @@ public class main {
     public static void main(String[] args) {
         try{
        ArrayList workers = GetWorkTime.setUser("src/main/resources/files/1.xlsx");
-        for (Worker worker: Worker.users) {
-            worker.monthStat();
-        }
-
-        SQLSender sendsql = new SQLSender();
-        sendsql.createMonthDB("06_2023");
-        //        sendsql.sendToSQL(workers);
-//        ExcellSender excel = new ExcellSender();
-//        excel.sendTo("./Excel.xls");
-//        excel.sendTo(workers, "./Excel.xls");
+            SQLSender sendsql = new SQLSender();
+            System.out.println(sendsql.selectAll("06_2023"));
         }catch (Exception e){e.printStackTrace();}
     }
 }
