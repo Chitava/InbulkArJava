@@ -10,10 +10,9 @@ import java.sql.*;
 import java.util.ArrayList;
 import java.util.Properties;
 
-public class SQLSender {
+public class SQLSender implements ConnectTo {
 
     public void insertWorker(ArrayList<Worker> workers) {
-
         try {
             Class.forName("com.mysql.cj.jdbc.Driver").getDeclaredConstructor().newInstance();
             try (Connection conn = getConnection()) {
@@ -34,18 +33,6 @@ public class SQLSender {
         }
     }
 
-    public static Connection getConnection() throws SQLException, IOException {
-        Properties props = new Properties();
-        try (InputStream in = Files.newInputStream(Paths.get("src/main/resources/files/database.pr"))) {
-            props.load(in);
-        } catch (Exception e) {
-            throw new RuntimeException();
-        }
-        String url = props.getProperty("url");
-        String username = props.getProperty("username");
-        String password = props.getProperty("password");
-        return DriverManager.getConnection(url, username, password);
-    }
 
     public void createWorkerDB() {
         try {
@@ -92,7 +79,7 @@ public class SQLSender {
             Class.forName("com.mysql.cj.jdbc.Driver").getDeclaredConstructor().newInstance();
             try (Connection conn = getConnection()) {
                 Statement statement = conn.createStatement();
-                ResultSet resultSet= statement.executeQuery("select * from " + month + " LEFT join workers USING (id);");
+                ResultSet resultSet = statement.executeQuery("select * from " + month + " LEFT join workers USING (id);");
                 while (resultSet.next()) {
                     result.add(resultSet.getString(6));                                     /*Имя*/
                     result.add(resultSet.getString(7));                                     /*Должность*/
@@ -133,4 +120,20 @@ public class SQLSender {
             e.printStackTrace();
         }
     }
+
+    @Override
+    public Connection getConnection() throws SQLException {
+
+        Properties props = new Properties();
+        try (InputStream in = Files.newInputStream(Paths.get("src/main/resources/files/database.pr"))) {
+            props.load(in);
+        } catch (Exception e) {
+            throw new RuntimeException();
+        }
+        String url = props.getProperty("url");
+        String username = props.getProperty("username");
+        String password = props.getProperty("password");
+        return DriverManager.getConnection(url, username, password);
+    }
 }
+
