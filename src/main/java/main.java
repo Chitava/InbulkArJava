@@ -12,11 +12,13 @@ public class main {
         for (Worker worker: Worker.users) {
             worker.monthStat();
         }
-//        SQLSender sendsql = new SQLSender();
-//        sendsql.sendToSQL(workers);
-        ExcellSender excel = new ExcellSender();
+
+        SQLSender sendsql = new SQLSender();
+        sendsql.createMonthDB("06_2023");
+        //        sendsql.sendToSQL(workers);
+//        ExcellSender excel = new ExcellSender();
 //        excel.sendTo("./Excel.xls");
-        excel.sendTo(workers, "./Excel.xls");
+//        excel.sendTo(workers, "./Excel.xls");
         }catch (Exception e){e.printStackTrace();}
     }
 }
