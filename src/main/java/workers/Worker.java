@@ -90,20 +90,23 @@ public class Worker{
         double wageElabors = 0.0;
         double wage = 0.0;
         DecimalFormat df = new DecimalFormat("#.##");
-        for (Object time : this.workTimes) {
-            if (Double.valueOf(time.toString()) > 9) {
+        for (int i = 0; i < this.workTimes.size(); i++) {
+
+//        }
+//        for (Object time : this.workTimes) {
+            if (Double.valueOf(workTimes.get(i).toString()) > 9) {
                 workDays++;
                 wage = wage + this.paymentPerDay;
-                String tempTime = (String) time;
-                int houer = Integer.parseInt((tempTime.substring(0, ((String) time).indexOf("."))));
+                String tempTime = (String) workTimes.get(i);
+                int houer = Integer.parseInt((tempTime.substring(0, ((String) workTimes.get(i)).indexOf("."))));
                 int minute = Integer.parseInt(tempTime.substring(tempTime.indexOf(".") + 1, tempTime.length()));
                 LocalDateTime tempWorkTime = LocalDateTime.of(1, 1, 1, houer, minute);
                 LocalDateTime resultTime = tempWorkTime.minusHours(workTime.getHour()).minusMinutes(workTime.getMinute());
                 elaborTimes = elaborTimes.plusHours(resultTime.getHour()).plusMinutes(resultTime.getMinute());
-            } else if (Double.valueOf(time.toString()) <= 9 && Double.valueOf(time.toString()) > 1) {
+            } else if (Double.valueOf(workTimes.get(i).toString()) <= 9 && Double.valueOf(workTimes.get(i).toString()) > 1) {
                 workDays++;
-                String tempTime = (String) time;
-                int houer = Integer.parseInt((tempTime.substring(0, ((String) time).indexOf("."))));
+                String tempTime = (String) workTimes.get(i);
+                int houer = Integer.parseInt((tempTime.substring(0, ((String) workTimes.get(i)).indexOf("."))));
                 int minute = Integer.parseInt(tempTime.substring(tempTime.indexOf(".") + 1));
                 LocalTime tempWorkTime = LocalTime.of(houer, minute);
                 tempWorkTime = tempWorkTime.minusHours(1);

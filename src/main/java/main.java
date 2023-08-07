@@ -12,7 +12,7 @@ public class main {
             worker.monthStat();
         }
         ExcelSender excel = new ExcelSender();
-        excel.sendTo("./Excel.xls");
+
         excel.sendTo(workers, "./Excel.xls");
         }
 }
