@@ -13,7 +13,7 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.ArrayList;
 
-public class ExcellSender implements SendTo{
+public class ExcelSender implements SendTo{
     @Override
     public void sendTo(String path) throws IOException {
         File file = new File(path);
@@ -57,9 +57,7 @@ public class ExcellSender implements SendTo{
             cell.setCellValue(0);
             colIndex++;
             cell = row.createCell(colIndex);
-            StringBuilder valInsert = new StringBuilder();
-            valInsert.append("=G").append(rowIndex).append("-").append("H").append(rowIndex);
-            cell.setCellValue(valInsert.toString());
+            cell.setCellValue("=G" + rowIndex + "-" + "H" + rowIndex);
             book.write(new FileOutputStream(fileRewrite));
         }
 
