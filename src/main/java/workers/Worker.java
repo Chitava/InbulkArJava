@@ -1,19 +1,14 @@
 package workers;
 
-import interfaces.SendTo;
-import org.apache.poi.hssf.usermodel.HSSFSheet;
-import org.apache.poi.hssf.usermodel.HSSFWorkbook;
-import org.apache.poi.ss.usermodel.Cell;
-import org.apache.poi.ss.usermodel.Row;
-import org.apache.poi.ss.usermodel.Sheet;
-import org.apache.poi.ss.usermodel.Workbook;
 
-import java.io.*;
+import methods.GetTime;
+
 import java.text.DecimalFormat;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
+
 
 public class Worker{
     private String name;
@@ -22,15 +17,42 @@ public class Worker{
     private ArrayList workTimes;
     private double paymentPerDay;
     private double paymentPerHour;
+    private double peymentForHollydays;
+
+    public void setPost(String post) {
+        this.post = post;
+    }
+
+    public void setMonthStat(ArrayList monthStat) {
+        this.monthStat = monthStat;
+    }
+
+    public void setWorkTimes(ArrayList workTimes) {
+        this.workTimes = workTimes;
+    }
+
+    public static ArrayList<Worker> getUsers() {
+        return users;
+    }
+
+    public static void setUsers(ArrayList<Worker> users) {
+        Worker.users = users;
+    }
+
+    public String getPost() {
+        return post;
+    }
+
     public static ArrayList<Worker> users = new ArrayList();
 
-    public Worker(String name, String post, double paymentPerDay, double paymentPerHour) {
+    public Worker(String name, String post, double paymentPerDay, double paymentPerHour, double peymentForHollydays) {
         this.name = name;
         this.post = post;
         this.paymentPerDay = paymentPerDay;
         this.paymentPerHour = paymentPerHour;
         this.monthStat = new ArrayList();
         this.workTimes = new ArrayList();
+        this.peymentForHollydays = peymentForHollydays;
     }
 
 
@@ -82,6 +104,13 @@ public class Worker{
     public int getSize() {
         return this.monthStat.size();
     }
+    public double getPeymentForHollydays() {
+        return peymentForHollydays;
+    }
+
+    public void setPeymentForHollydays(double peymentForHollydays) {
+        this.peymentForHollydays = peymentForHollydays;
+    }
 
     public String monthStat() {
         int workDays = 0;
@@ -91,30 +120,18 @@ public class Worker{
         double wage = 0.0;
         DecimalFormat df = new DecimalFormat("#.##");
         for (int i = 0; i < this.workTimes.size(); i++) {
-
-//        }
-//        for (Object time : this.workTimes) {
             if (Double.valueOf(workTimes.get(i).toString()) > 9) {
                 workDays++;
                 wage = wage + this.paymentPerDay;
-                String tempTime = (String) workTimes.get(i);
-                int houer = Integer.parseInt((tempTime.substring(0, ((String) workTimes.get(i)).indexOf("."))));
-                int minute = Integer.parseInt(tempTime.substring(tempTime.indexOf(".") + 1, tempTime.length()));
-                LocalDateTime tempWorkTime = LocalDateTime.of(1, 1, 1, houer, minute);
-                LocalDateTime resultTime = tempWorkTime.minusHours(workTime.getHour()).minusMinutes(workTime.getMinute());
-                elaborTimes = elaborTimes.plusHours(resultTime.getHour()).plusMinutes(resultTime.getMinute());
+                LocalDateTime elaborTime = GetTime.getElaborTime((String) workTimes.get(i), "9.0");
+                elaborTimes = elaborTimes.plusHours(elaborTime.getHour()).plusMinutes(elaborTime.getMinute());
             } else if (Double.valueOf(workTimes.get(i).toString()) <= 9 && Double.valueOf(workTimes.get(i).toString()) > 1) {
                 workDays++;
-                String tempTime = (String) workTimes.get(i);
-                int houer = Integer.parseInt((tempTime.substring(0, ((String) workTimes.get(i)).indexOf("."))));
-                int minute = Integer.parseInt(tempTime.substring(tempTime.indexOf(".") + 1));
-                LocalTime tempWorkTime = LocalTime.of(houer, minute);
-                tempWorkTime = tempWorkTime.minusHours(1);
                 double paymentForHouer = this.paymentPerDay / 8;
-                wage = wage + (Double.valueOf(tempWorkTime.format(DateTimeFormatter.ofPattern("H.mm"))) * paymentForHouer);
+                wage = wage + (GetTime.getTimeNotFullWorkDay(String.valueOf(workTimes.get(i))) * paymentForHouer);
             }
         }
-        String elaborTime = (String.valueOf((elaborTimes.getDayOfMonth() - 1) * 24 + elaborTimes.getHour()) + "." + elaborTimes.getMinute());
+        String elaborTime = (((elaborTimes.getDayOfMonth() - 1) * 24 + elaborTimes.getHour()) + "." + elaborTimes.getMinute());
         wageElabors = wageElabors + Double.parseDouble(elaborTime) * this.paymentPerHour;
         double fullWage = wage + wageElabors;
         fullWage = Double.parseDouble(String.valueOf(fullWage));
@@ -134,6 +151,7 @@ public class Worker{
         return String.format("Работник - %s\nдолжность - %s\nРазмер оплаты работы за день - %s р.\nРазмер почасовой оплаты " +
                 "переработки - %s р.", this.name, this.post, this.paymentPerDay, this.paymentPerHour);
     }
+
 
 
 }

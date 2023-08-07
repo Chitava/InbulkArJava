@@ -6,6 +6,7 @@ import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.ss.usermodel.Sheet;
 import org.apache.poi.ss.usermodel.Workbook;
 import workers.Worker;
+
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
@@ -49,7 +50,17 @@ public class ExcelSender implements SendTo {
                 cell.setCellValue("=G" + rowIndex + "-" + "H" + rowIndex);
                 book.write(new FileOutputStream(file));
                 book.write(stream);
+
             }
         }
+        ArrayList indexs = new ArrayList<>();
+        for (int i = 0; i < path.length(); i++) {
+            if (path.charAt(i) == '/') {
+                indexs.add(i);
+            }
+        }
+        int index = (int) indexs.get(indexs.size() - 1);
+        System.out.println("Данные сохранены в файл - " + path.substring(index+1));
     }
 }
+
