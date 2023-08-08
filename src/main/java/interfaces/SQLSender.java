@@ -42,8 +42,8 @@ public class SQLSender implements ConnectTo {
                 statement.executeUpdate("CREATE TABLE IF NOT EXISTS workers " +
                         "(id VARCHAR(100) PRIMARY KEY," +
                         "name VARCHAR(255) NOT NULL," +
-                        "post VARCHAR(30)," +
-                        "doublesalary BOOLEAN DEFAULT false);");
+                        "post BOOLEAN DEFAULT false," +
+                        "doublesalary DOUBLE);");
                 statement.close();
                 System.out.println("Таблица сотрудников создана успешно");
             }
@@ -60,6 +60,7 @@ public class SQLSender implements ConnectTo {
                 statement.executeUpdate("CREATE TABLE IF NOT EXISTS `" + month + "` " +
                         "(id VARCHAR(100) PRIMARY KEY UNIQUE, " +
                         "workdays INT, " +
+                        "holydaystime INT, " +
                         "wage DOUBLE, " +
                         "elabordays INT, " +
                         "elaborwage DOUBLE, " +
@@ -106,11 +107,11 @@ public class SQLSender implements ConnectTo {
                 System.out.println("Соединение с базой установлено");
                 Statement statement = conn.createStatement();
                 statement.executeUpdate("SET FOREIGN_KEY_CHECKS = 0;");
-                statement.executeUpdate("INSERT INTO `" + month + "` (id, workdays, wage, elabordays, elaborwage) VALUES" +
+                statement.executeUpdate("INSERT INTO `" + month + "` (id, workdays, holydaystime, wage, elabordays, elaborwage) VALUES" +
                         " (" + value.get(0) + ", " + value.get(1) + ", " + value.get(2) + ", " +
-                        "" + value.get(3) + ", " + value.get(4) + ") ON DUPLICATE KEY UPDATE " +
-                        "workdays = " + value.get(1) + ", wage = " + value.get(2) + "," +
-                        " elabordays = " + value.get(3) + ", elaborwage = " + value.get(4) + ";");
+                        "" + value.get(3) + ", " + value.get(4) + ", " + value.get(5) + ") ON DUPLICATE KEY UPDATE " +
+                        "workdays = " + value.get(1) + "workdays = " + value.get(2) + ", wage = " + value.get(3) + "," +
+                        " elabordays = " + value.get(4) + ", elaborwage = " + value.get(5) + ";");
                 statement.close();
                 System.out.println("Данные за " + month + " внесены в таблицу успешно");
             } catch (Exception e) {

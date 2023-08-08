@@ -2,6 +2,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 
 import interfaces.ExcelSender;
+import interfaces.SQLSender;
 import methods.GetTime;
 import workers.Worker;
 
@@ -15,12 +16,21 @@ public class main {
        hollydays.add(4);
        hollydays.add(7);
 
+//        for (Worker worker : Worker.users) {
+//            System.out.println(worker.monthStat("07_2023", hollydays));
+//        }
+//        ExcelSender excel = new ExcelSender();
+//
+//        excel.sendTo(workers, "./зарплата за июль 2023.xls");
+//    }
+        SQLSender sql = new SQLSender();
+        sql.createWorkerDB();
         for (Worker worker : Worker.users) {
-            System.out.println(worker.monthStat("07_2023", hollydays));
-        }
-        ExcelSender excel = new ExcelSender();
 
-        excel.sendTo(workers, "./зарплата за июль 2023.xls");
+        }
+
+
+
     }
 
 }
