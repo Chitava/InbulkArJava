@@ -8,14 +8,14 @@ import java.util.ArrayList;
 import java.util.Properties;
 
 public class SQLSender implements ConnectTo {
-    public void createWorkerDB() {              //Создание таблицы сотрудников
+    public void createWorkerDB() {              //Создание новой таблицы сотрудников
         try {
             Class.forName("com.mysql.cj.jdbc.Driver").getDeclaredConstructor().newInstance();
             try (Connection conn = getConnection()) {
                 Statement statement = conn.createStatement();
                 statement.executeUpdate("CREATE TABLE IF NOT EXISTS workers " +
                         "(id VARCHAR(100) PRIMARY KEY," +
-                        "name VARCHAR(255) NOT NULL," +
+                        "nameworker VARCHAR(255) NOT NULL," +
                         "post BOOLEAN DEFAULT false," +
                         "paymentPerDay DOUBLE," +
                         "paymentPerHour DOUBLE," +
@@ -34,7 +34,7 @@ public class SQLSender implements ConnectTo {
                 System.out.println("Соединение с базой установлено");
                 Statement statement = conn.createStatement();
                 StringBuilder set = new StringBuilder();
-                set.append("INSERT workers (id, name, post, paymentPerDay, paymentPerHour, peymentForHollydays) " +
+                set.append("INSERT workers (id, nameworker, post, paymentPerDay, paymentPerHour, peymentForHollydays) " +
                             "VALUES ('" + worker.getName().hashCode() + "', '" + worker.getName() + "', "
                            + worker.getPost() + ", '" + worker.getPaymentPerDay()+ "', '" + worker.getPaymentPerHour()
                            + "', '" + worker.getPeymentForHollydays() + "');");
@@ -50,7 +50,32 @@ public class SQLSender implements ConnectTo {
             e.printStackTrace();
         }
     }
+    public ArrayList selectWorker(String name) {
+        ArrayList result = new ArrayList();
 
+        try {
+            Class.forName("com.mysql.cj.jdbc.Driver").getDeclaredConstructor().newInstance();
+            try (Connection conn = getConnection()) {
+                Statement statement = conn.createStatement();
+                ResultSet resultSet = statement.executeQuery("Select * FROM workers WHERE nameworker LIKE '%"+name+"%';");
+                while (resultSet.next()) {
+                    ArrayList row = new ArrayList();
+                    row.add(resultSet.getString("nameworker"));
+                    row.add(resultSet.getString("paymentPerDay"));
+                    row.add(resultSet.getString("paymentPerHour"));
+                    row.add(resultSet.getString("peymentForHollydays"));
+                    result.add(row);
+
+
+
+                }
+                statement.close();
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return result;
+    }
 
 
 
