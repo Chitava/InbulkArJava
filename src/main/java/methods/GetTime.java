@@ -10,10 +10,7 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
-import java.time.DayOfWeek;
-import java.time.LocalDate;
-import java.time.LocalDateTime;
-import java.time.LocalTime;
+import java.time.*;
 import java.util.*;
 
 //Получение статистики за указанный месяц
@@ -41,13 +38,13 @@ public class GetTime {
                     try {
                         Integer.parseInt(value);
                         user = new Worker(cellIterator.next().getStringCellValue().replace(" ", "")
-                                .replace("\n", " "), "рабочий", 1500.00,
+                                .replace("\n", " "), true, 1500.00,
                                 200.00, 3000.00);
                         Worker.addUser(user);
                     } catch (NumberFormatException e) {
                         if (!value.isBlank()) {
                             if (value.contains(":") || value.contains("--")) {
-                                if (value.contains("--\n--\n--")) continue;
+                                if (value.contains("--\n--\n--")) user.setWorkTimes("0");
                                 else {
                                     String[] tempTime = value.split("\n");
                                     for (int j = 0; j < tempTime.length; j++) {
@@ -90,12 +87,14 @@ public class GetTime {
         }
         return Worker.users;
     }
-//    Получения дня недели по заданному числу
+
+    //    Получения дня недели по заданному числу
     public static int getDayNumber(LocalDate date) {
         DayOfWeek day = date.getDayOfWeek();
         return day.getValue();
     }
-//Расчет времени переработки (когда больше 9 часов)
+
+    //Расчет времени переработки (когда больше 9 часов)
     public static LocalDateTime getElaborTime(String time, String dayWorkTime) {
         int minuteWorkTime;
         int minuteDayWorkTime;
@@ -116,7 +115,8 @@ public class GetTime {
         LocalDateTime elaborTime = WorkTime.minusHours(DayWorkTime.getHour()).minusMinutes(DayWorkTime.getMinute());
         return elaborTime;
     }
-//    Расчет отработанного времени когда отработано меньше 9 часов
+
+    //    Расчет отработанного времени когда отработано меньше 9 часов
     public static double getTimeNotFullWorkDay(String time) {
         int houer = Integer.parseInt((time.substring(0, time.indexOf("."))));
         int minute = Integer.parseInt(time.substring(time.indexOf(".") + 1));

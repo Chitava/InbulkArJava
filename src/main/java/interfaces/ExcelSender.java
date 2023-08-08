@@ -18,7 +18,7 @@ public class ExcelSender implements SendTo {
         int rowIndex = 1;
         Row row;
         File file = new File(path);
-        String[] nameCol = {"№", "ФИО", "Отработано дней", "Часов переработки", "Зарплата за дни",
+        String[] nameCol = {"№", "ФИО", "Отработано дней", "Выходные и праздники", "Часов переработки", "Зарплата за дни",
                 "Зарплата за переработку", "Зарплата за месяц", "Аванс", "Итого на руки"};
         try (FileOutputStream stream = new FileOutputStream(file)) {
             Workbook book = new HSSFWorkbook();
@@ -47,7 +47,7 @@ public class ExcelSender implements SendTo {
                 cell.setCellValue(0);
                 colIndex++;
                 cell = row.createCell(colIndex);
-                cell.setCellValue("=G" + rowIndex + "-" + "H" + rowIndex);
+                cell.setCellValue("=H" + rowIndex + "-" + "I" + rowIndex);
                 book.write(new FileOutputStream(file));
                 book.write(stream);
 
