@@ -1,8 +1,5 @@
 package interfaces;
-
 import workers.Worker;
-
-import java.io.IOException;
 import java.io.InputStream;
 import java.nio.file.Files;
 import java.nio.file.Paths;
@@ -20,7 +17,7 @@ public class SQLSender implements ConnectTo {
                 Statement statement = conn.createStatement();
                 for (Worker worker : workers) {
                     StringBuilder set = new StringBuilder();
-                    set.append("INSERT workers (id, name, post) VALUES ('" + worker.getName().hashCode() + "', '" +
+                    set.append("INSERT workers (id, name, post, doubleSallary, ) VALUES ('" + worker.getName().hashCode() + "', '" +
                             worker.getName() + "', '" + worker.getPost() + "');");
                     statement.executeUpdate(String.valueOf(set));
                 }

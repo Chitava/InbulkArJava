@@ -1,9 +1,7 @@
 import java.util.ArrayList;
-
-import interfaces.ExcellSender;
 import interfaces.SQLSender;
 import methods.GetWorkTime;
-import workers.Worker;
+
 
 public class main {
     public static void main(String[] args) {
