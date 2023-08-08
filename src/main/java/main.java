@@ -1,17 +1,37 @@
+import java.io.IOException;
 import java.util.ArrayList;
 import interfaces.SQLSender;
-import methods.GetWorkTime;
+import methods.GetTime;
+import workers.Worker;
 
 
 public class main {
-    public static void main(String[] args) {
-        try{
-       ArrayList workers = GetWorkTime.setUser("src/main/resources/files/1.xlsx");
-            SQLSender sendsql = new SQLSender();
-            System.out.println(sendsql.selectAll("06_2023"));
-        }catch (Exception e){e.printStackTrace();}
+    public static void main(String[] args) throws IOException {
+        ArrayList workers = GetTime.setUser("src/main/resources/files/1.xlsx");
+        ArrayList hollydays = new ArrayList<>();
+        hollydays.add(1);
+        hollydays.add(2);
+        hollydays.add(3);
+        hollydays.add(4);
+        hollydays.add(7);
+
+//        for (Worker worker : Worker.users) {
+//            System.out.println(worker.monthStat("07_2023", hollydays));
+//        }
+//        ExcelSender excel = new ExcelSender();
+//
+//        excel.sendTo(workers, "./зарплата за июль 2023.xls");
+//    }
+        SQLSender sql = new SQLSender();
+        sql.createWorkerDB();
+        for (Worker worker : Worker.users) {
+            sql.insertWorker(worker);
+        }
+
     }
 }
+
+
 
 
 

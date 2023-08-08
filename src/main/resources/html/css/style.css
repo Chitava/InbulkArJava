@@ -1,0 +1,59 @@
+.header{    
+    
+}
+.workfield{
+    margin-top: 1%;
+    display: flex;
+    flex-wrap: nowrap;
+    justify-content: center;
+    flex-direction: row;
+    
+}
+
+.emblem {
+    height: 50px;
+    padding: 10px 22px;
+}
+
+.menu{
+    
+    width: 17%;
+    display: flex;
+    flex-direction: column;
+    flex-wrap: nowrap;
+    padding: 10px;
+}
+
+.resultfield{
+    
+    width: 63%;
+    display: flex;
+    flex-direction: column;
+    flex-wrap: nowrap;
+}
+
+.workersmenu{
+    
+    width: 20%;
+    display: flex;
+    flex-direction: column;
+    flex-wrap: nowrap;
+}
+
+.button {
+    display: inline-block;
+    color: white;
+    text-decoration: none;
+    padding: .5em 2em;
+    outline: none;
+    border-width: 2px 0;
+    border-style: solid none;
+    border-color: #FDBE33 #000 #D77206;
+    border-radius: 6px;
+    background: linear-gradient(#e27f29, #f78b2d) #e27f29;
+    transition: 0.2s;
+    margin: 10px;
+  } 
+  .button:hover { background: linear-gradient(#f5ae00, #f59500) #f5ae00; }
+  .button:active { background: linear-gradient(#f59500, #f5ae00) #f59500; }
+    

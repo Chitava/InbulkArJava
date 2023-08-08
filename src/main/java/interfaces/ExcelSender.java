@@ -6,35 +6,27 @@ import org.apache.poi.ss.usermodel.Sheet;
 import org.apache.poi.ss.usermodel.Workbook;
 import workers.Worker;
 import java.io.File;
-import java.io.FileInputStream;
 import java.io.FileOutputStream;
+import java.io.IOException;
 import java.util.ArrayList;
 
-public class ExcellSender implements SendTo {
-
+public class ExcelSender implements SendTo {
     @Override
-    public void sendTo(ArrayList<Worker> workers, String path) {
+    public void sendTo(ArrayList<Worker> workers, String path) throws IOException {
+        int rowIndex = 1;
+        Row row;
         File file = new File(path);
-        String[] nameCol = {"№", "ФИО", "Отработано дней", "Часов переработки", "Зарплата за дни",
+        String[] nameCol = {"№", "ФИО", "Отработано дней", "Выходные и праздники", "Часов переработки", "Зарплата за дни",
                 "Зарплата за переработку", "Зарплата за месяц", "Аванс", "Итого на руки"};
         try (FileOutputStream stream = new FileOutputStream(file)) {
             Workbook book = new HSSFWorkbook();
             Sheet sheet = book.createSheet("Зарплата за месяц");
-            Row row = sheet.createRow(0);
+            row = sheet.createRow(0);
             for (int i = 0; i < nameCol.length; i++) {
                 Cell cell = row.createCell(i);
                 cell.setCellValue(nameCol[i]);
             }
-            book.write(stream);
-        } catch (Exception e) {
-            throw new RuntimeException();
-        }
-        int rowIndex = 1;
-        Row row;
-        for (Worker worker : workers) {
-            File fileRewrite = new File(path);
-            try (Workbook book = new HSSFWorkbook(new FileInputStream(fileRewrite))) {
-                Sheet sheet = book.getSheet("Зарплата за месяц");
+            for (Worker worker : workers) {
                 int colIndex = 0;
                 row = sheet.createRow(rowIndex);
                 Cell cell = row.createCell(colIndex);
@@ -53,13 +45,20 @@ public class ExcellSender implements SendTo {
                 cell.setCellValue(0);
                 colIndex++;
                 cell = row.createCell(colIndex);
-                StringBuilder valInsert = new StringBuilder();
-                valInsert.append("=G").append(rowIndex).append("-").append("H").append(rowIndex);
-                cell.setCellValue(valInsert.toString());
-                book.write(new FileOutputStream(fileRewrite));
-            } catch (Exception e) {
-                throw new RuntimeException();
+                cell.setCellValue("=H" + rowIndex + "-" + "I" + rowIndex);
+                book.write(new FileOutputStream(file));
+                book.write(stream);
+
             }
         }
+        ArrayList indexs = new ArrayList<>();
+        for (int i = 0; i < path.length(); i++) {
+            if (path.charAt(i) == '/') {
+                indexs.add(i);
+            }
+        }
+        int index = (int) indexs.get(indexs.size() - 1);
+        System.out.println("Данные сохранены в файл - " + path.substring(index+1));
     }
 }
+
