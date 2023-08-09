@@ -1,7 +1,9 @@
 package interfaces;
 
 import workers.Worker;
+
 import java.io.InputStream;
+import java.lang.reflect.InvocationTargetException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.sql.*;
@@ -20,12 +22,12 @@ public class SQLSender implements ConnectTo {
                         " ('" + worker.getName().hashCode() + "', '" + worker.getName() + "', " + worker.getPost() +
                         ", '" + worker.getPaymentPerDay() + "', '" + worker.getPaymentPerHour() + "', '"
                         + worker.getPeymentForHollydays() + "') ON DUPLICATE KEY UPDATE workername= '" + worker.getName()
-                        + "', post = "+ worker.getPost() + ", paymentPerDay = '" + worker.getPaymentPerDay() + "', " +
+                        + "', post = " + worker.getPost() + ", paymentPerDay = '" + worker.getPaymentPerDay() + "', " +
                         "paymentPerHour = '" + worker.getPaymentPerHour() + "', peymentForHollydays = '"
                         + worker.getPeymentForHollydays() + "';");
                 statement.executeUpdate(String.valueOf(set));
                 statement.close();
-                System.out.println("Данные сотрудника " + worker.getName() +" - внесены в базу");
+
 
 
             } catch (Exception e) {
@@ -49,7 +51,7 @@ public class SQLSender implements ConnectTo {
                         "paymentPerHour DOUBLE," +
                         "peymentForHollydays DOUBLE);");
                 statement.close();
-                System.out.println("Таблица сотрудников создана успешно");
+
             }
         } catch (Exception e) {
             e.printStackTrace();
@@ -73,7 +75,7 @@ public class SQLSender implements ConnectTo {
                         "FOREIGN KEY (id) " +
                         "REFERENCES workers (id) ON DELETE CASCADE);");
                 statement.close();
-                System.out.println("Таблица " + month + " создана успешно");
+
             }
         } catch (Exception e) {
             e.printStackTrace();
@@ -110,7 +112,7 @@ public class SQLSender implements ConnectTo {
     }
 
     public void insertMonthValue(Worker worker, String month) { //Добавление значений в месячную базу
-        deleteTable(month);
+
         createMonthDB(month);
         try {
             Class.forName("com.mysql.cj.jdbc.Driver").getDeclaredConstructor().newInstance();
@@ -119,13 +121,13 @@ public class SQLSender implements ConnectTo {
                 statement.executeUpdate("SET FOREIGN_KEY_CHECKS = 0;");
                 statement.executeUpdate("INSERT INTO `" + month + "`(id, workdays, workholydays, wage, elabortime, " +
                         "elaborwage, fullwage) VALUES (" + worker.getName().hashCode() + ", " + worker.getWorkDays() +
-                        ", " + worker.getWorkHolydays() + ", " +  worker.getWage() + ", " + worker.getElaborTimes() +
-                        ", " + worker.getWageElaborTime() +  ", " + worker.getFullWage() + ") ON DUPLICATE KEY UPDATE " +
+                        ", " + worker.getWorkHolydays() + ", " + worker.getWage() + ", " + worker.getElaborTimes() +
+                        ", " + worker.getWageElaborTime() + ", " + worker.getFullWage() + ") ON DUPLICATE KEY UPDATE " +
                         "workdays = " + worker.getWorkDays() + ", workholydays = " + worker.getWorkHolydays() +
                         ", wage = " + worker.getWage() + ", elabortime = " + worker.getElaborTimes() +
-                        ", elaborwage = " + worker.getWageElaborTime() +  ", fullwage = " + worker.getFullWage() +";");
+                        ", elaborwage = " + worker.getWageElaborTime() + ", fullwage = " + worker.getFullWage() + ";");
                 statement.close();
-                System.out.println("Данные за " + month + " внесены в таблицу успешно");
+
             } catch (Exception e) {
                 e.printStackTrace();
             }
@@ -156,7 +158,7 @@ public class SQLSender implements ConnectTo {
                 Statement statement = conn.createStatement();
                 statement.executeUpdate("CREATE SCHEMA IF NOT EXISTS `Inbulk`;");
                 statement.close();
-                System.out.println("База Inbulk создана успешно");
+
             }
         } catch (Exception e) {
             e.printStackTrace();
@@ -183,21 +185,56 @@ public class SQLSender implements ConnectTo {
         }
         return workers;
     }
-    public void deleteTable (String name){
+
+    public void deleteTable(String name) {  //Удаление таблицы
         try {
             Class.forName("com.mysql.cj.jdbc.Driver").getDeclaredConstructor().newInstance();
             try (Connection conn = getConnection()) {
                 Statement statement = conn.createStatement();
-                statement.executeUpdate("DROP TABLES " + name +";");
-
+                statement.executeUpdate("SET FOREIGN_KEY_CHECKS = 0;");
+                statement.executeUpdate("DROP TABLES " + name + ";");
                 statement.close();
             }
         } catch (Exception e) {
             e.printStackTrace();
         }
+    }
+
+    public Worker selectWorker(String name) { //Проверк наличие сотрудник в базе
+
+        Worker worker = null;
+        try {
+            Class.forName("com.mysql.cj.jdbc.Driver").getDeclaredConstructor().newInstance();
+            try (Connection conn = getConnection()) {
+                Statement statement = conn.createStatement();
+                ResultSet resultSet = statement.executeQuery("select * from workers WHERE workername = '" + name + "';");
+                resultSet.next();
+                worker = new Worker(resultSet.getString(2), resultSet.getBoolean(3),
+                        resultSet.getDouble(4), resultSet.getDouble(5),
+                        resultSet.getDouble(6));
+                statement.close();
+                }
+            } catch (SQLException | ClassNotFoundException e) {
+
+                return null;
+
+            } catch (InvocationTargetException e) {
+            throw new RuntimeException(e);
+        } catch (InstantiationException e) {
+            throw new RuntimeException(e);
+        } catch (IllegalAccessException e) {
+            throw new RuntimeException(e);
+        } catch (NoSuchMethodException e) {
+            throw new RuntimeException(e);
+        }
+        return worker;
 
 
 
     }
 }
+
+
+
+
 

@@ -1,5 +1,6 @@
 package methods;
-
+import java.util.Scanner;
+import interfaces.SQLSender;
 import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.xssf.usermodel.XSSFSheet;
@@ -17,6 +18,7 @@ import java.util.*;
 public class GetTime {
     public static ArrayList setUser(String path) { //Метод добавления сотрудника в базу
         File file = new File(path);
+        SQLSender sql = new SQLSender();
         try (FileInputStream stream = new FileInputStream(file);) {
             XSSFWorkbook wb = new XSSFWorkbook(stream);
             XSSFSheet sheet = wb.getSheetAt(0);
@@ -37,9 +39,24 @@ public class GetTime {
                     String value = cell.getStringCellValue();
                     try {
                         Integer.parseInt(value);
-                        worker = new Worker(cellIterator.next().getStringCellValue().replace(" ", "")
-                                .replace("\n", " "), true, 1500.00,
-                                200.00, 3000.00);
+                        String nameworker = cellIterator.next().getStringCellValue().replace(" ", "")
+                                .replace("\n", " ");
+                        if (sql.selectWorker(nameworker) == null) {
+                            System.out.println("Добавляем сотрудника - " + nameworker);
+                            Scanner in = new Scanner(System.in);
+                            System.out.print("Введите должность: ");
+                            boolean post = in.nextBoolean();
+                            System.out.print("Введите оклад за день: ");
+                            double payPerDay = in.nextDouble();
+                            System.out.print("Введите оклад за час: ");
+                            double payPerHouer = in.nextDouble();
+                            System.out.print("Введите оклад за выходные: ");
+                            double payPerHolliday = in.nextDouble();
+                            worker = new Worker(nameworker, post, payPerDay,
+                                    payPerHouer, payPerHolliday);
+                        }else{
+                            worker = sql.selectWorker(nameworker);
+                        }
                         Worker.addUser(worker);
                     } catch (NumberFormatException e) {
                         if (!value.isBlank()) {

@@ -38,20 +38,41 @@ public class ExcelSender implements SendTo {
                 cell = row.createCell(colIndex);
                 cell.setCellValue(worker.getName());
                 colIndex++;
-                for (int i = 0; i < worker.getSize(); i++) {
-                    cell = row.createCell(colIndex);
-                    cell.setCellValue((Double.parseDouble((String) worker.getMonthStat().get(i))));
-                    colIndex++;
-                }
                 cell = row.createCell(colIndex);
-                cell.setCellValue(0);
+                cell.setCellValue(worker.getWorkDays());
                 colIndex++;
+                cell = row.createCell(colIndex);
+                cell.setCellValue(worker.getWorkHolydays());
+                colIndex++;
+                cell = row.createCell(colIndex);
+                cell.setCellValue((Double) worker.getElaborTimes());
+                colIndex++;
+                cell = row.createCell(colIndex);
+                cell.setCellValue((Double) worker.getWage());
+                colIndex++;
+                cell = row.createCell(colIndex);
+                cell.setCellValue((Double) worker.getWageElaborTime());
+                colIndex++;
+                cell = row.createCell(colIndex);
+                cell.setCellValue((Double) worker.getFullWage());
+                colIndex++;
+                cell = row.createCell(colIndex);
+                cell.setCellValue(worker.getPrepayment());
+                colIndex++;
+//                for (int i = 0; i < worker.getSize(); i++) {
+//                    cell = row.createCell(colIndex);
+//                    cell.setCellValue((Double.parseDouble((String) worker.getMonthStat().get(i))));
+//                    colIndex++;
+//                }
+
                 cell = row.createCell(colIndex);
                 cell.setCellValue("=H" + rowIndex + "-" + "I" + rowIndex);
                 book.write(new FileOutputStream(file));
                 book.write(stream);
 
             }
+        }catch (IOException e){
+            throw new RuntimeException();
         }
         ArrayList indexs = new ArrayList<>();
         for (int i = 0; i < path.length(); i++) {
@@ -60,7 +81,7 @@ public class ExcelSender implements SendTo {
             }
         }
         int index = (int) indexs.get(indexs.size() - 1);
-        System.out.println("Данные сохранены в файл - " + path.substring(index+1));
+//        System.out.println("Данные сохранены в файл - " + path.substring(index+1));
     }
 }
 

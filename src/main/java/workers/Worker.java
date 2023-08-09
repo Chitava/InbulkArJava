@@ -226,7 +226,7 @@ public class Worker {
                              "Время переработки - %s ч.\nЗарплата за полные дни - %s р.\nЗарплата за переработку - %s р." +
                              "\nПолучен аванс - %s р.\nИтого за месяц с учетом аванса - %s р.", this.name,
                              this.getWorkDays(), this.getWorkHolydays(), this.getElaborTimes(), this.getWage(),
-                             this.getWageElaborTime(), getPrepayment(), this.getFullWage());
+                             String.format("%.2f",this.getWageElaborTime()), getPrepayment(), Math.round(this.getFullWage()));
     }
 
 
