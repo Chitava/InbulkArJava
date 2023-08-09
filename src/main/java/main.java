@@ -15,29 +15,30 @@ public class main {
         hollydays.add(3);
         hollydays.add(4);
         hollydays.add(7);
-
+        SQLSender sql = new SQLSender();
+        sql.createWorkerDB();
+        sql.createMonthDB("07_2023");
         for (Worker worker : Worker.users) {
+            sql.insertWorker(worker);
             worker.monthStat("07_2023", hollydays);
+            sql.insertMonthValue(worker, "07_2023");
+        }
+        System.out.println("------------------------------");
+        for (Object worker:
+        sql.selectAllWorkersWithMonthStat("07_2023")) {
             System.out.println(worker.toString());
-//        }
+            System.out.println("------------------------------");
+        }
+
+//        System.out.println(sql.selectAllWorkers().toString());
+//
 //        ExcelSender excel = new ExcelSender();
 //
 //        excel.sendTo(workers, "./зарплата за июль 2023.xls");
 //    }
-//        SQLSender sql = new SQLSender();
-//        sql.createSchema();
-//        sql.createWorkerDB();
-//        System.out.println(sql.selectAllWorkers());
-
-//        for (Worker worker : Worker.users) {
-//
-//        }
-
-
         }
-
     }
-}
+
 
 
 

@@ -38,7 +38,7 @@ public class GetTime {
                     try {
                         Integer.parseInt(value);
                         worker = new Worker(cellIterator.next().getStringCellValue().replace(" ", "")
-                                .replace("\n", " "), false, 1500.00,
+                                .replace("\n", " "), true, 1500.00,
                                 200.00, 3000.00);
                         Worker.addUser(worker);
                     } catch (NumberFormatException e) {

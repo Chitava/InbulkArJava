@@ -1,8 +1,6 @@
 package interfaces;
 
 import workers.Worker;
-
-import java.io.IOException;
 import java.io.InputStream;
 import java.nio.file.Files;
 import java.nio.file.Paths;
@@ -12,19 +10,24 @@ import java.util.Properties;
 
 public class SQLSender implements ConnectTo {
 
-    public void insertWorker(ArrayList<Worker> workers) {
+    public void insertWorker(Worker worker) { //Добавление сотрудника в базу
         try {
             Class.forName("com.mysql.cj.jdbc.Driver").getDeclaredConstructor().newInstance();
             try (Connection conn = getConnection()) {
-                System.out.println("Соединение с базой установлено");
                 Statement statement = conn.createStatement();
-                for (Worker worker : workers) {
-                    StringBuilder set = new StringBuilder();
-                    set.append("INSERT workers (id, name, post) VALUES ('" + worker.getName().hashCode() + "', '" +
-                            worker.getName() + "', '" + worker.getPost() + "');");
-                    statement.executeUpdate(String.valueOf(set));
-                }
+                StringBuilder set = new StringBuilder();
+                set.append("INSERT workers (id, workername, post, paymentPerDay, paymentPerHour, peymentForHollydays) VALUES" +
+                        " ('" + worker.getName().hashCode() + "', '" + worker.getName() + "', " + worker.getPost() +
+                        ", '" + worker.getPaymentPerDay() + "', '" + worker.getPaymentPerHour() + "', '"
+                        + worker.getPeymentForHollydays() + "') ON DUPLICATE KEY UPDATE workername= '" + worker.getName()
+                        + "', post = "+ worker.getPost() + ", paymentPerDay = '" + worker.getPaymentPerDay() + "', " +
+                        "paymentPerHour = '" + worker.getPaymentPerHour() + "', peymentForHollydays = '"
+                        + worker.getPeymentForHollydays() + "';");
+                statement.executeUpdate(String.valueOf(set));
                 statement.close();
+                System.out.println("Данные сотрудника " + worker.getName() +" - внесены в базу");
+
+
             } catch (Exception e) {
                 e.printStackTrace();
             }
@@ -33,14 +36,14 @@ public class SQLSender implements ConnectTo {
         }
     }
 
-    public void createWorkerDB() {
+    public void createWorkerDB() {   //Создание базы сотрудников
         try {
             Class.forName("com.mysql.cj.jdbc.Driver").getDeclaredConstructor().newInstance();
             try (Connection conn = getConnection()) {
                 Statement statement = conn.createStatement();
                 statement.executeUpdate("CREATE TABLE IF NOT EXISTS workers " +
-                        "(id VARCHAR(100) PRIMARY KEY," +
-                        "name VARCHAR(255) NOT NULL," +
+                        "(id VARCHAR(100) PRIMARY KEY ," +
+                        "workername VARCHAR(255) NOT NULL," +
                         "post BOOLEAN DEFAULT false," +
                         "paymentPerDay DOUBLE," +
                         "paymentPerHour DOUBLE," +
@@ -53,7 +56,7 @@ public class SQLSender implements ConnectTo {
         }
     }
 
-    public void createMonthDB(String month) {
+    public void createMonthDB(String month) {  //создание базы месячной статистики
         try {
             Class.forName("com.mysql.cj.jdbc.Driver").getDeclaredConstructor().newInstance();
             try (Connection conn = getConnection()) {
@@ -63,11 +66,11 @@ public class SQLSender implements ConnectTo {
                         "workdays INT, " +
                         "workholydays INT, " +
                         "wage DOUBLE, " +
-                        "elabortime INT, " +
+                        "elabortime DOUBLE, " +
                         "elaborwage DOUBLE, " +
-                        "fullwage DOUBLE" +
+                        "fullwage DOUBLE," +
                         "FOREIGN KEY (id) " +
-                        "REFERENCES workers (id));");
+                        "REFERENCES workers (id) ON DELETE CASCADE);");
                 statement.close();
                 System.out.println("Таблица " + month + " создана успешно");
             }
@@ -76,25 +79,28 @@ public class SQLSender implements ConnectTo {
         }
     }
 
-    public ArrayList selectAllWorkersWithMonthStat(String month) {
+    public ArrayList selectAllWorkersWithMonthStat(String month) {  //Выбор всех сотрудников из месячной статистики
         ArrayList result = new ArrayList<>();
         try {
             Class.forName("com.mysql.cj.jdbc.Driver").getDeclaredConstructor().newInstance();
             try (Connection conn = getConnection()) {
                 Statement statement = conn.createStatement();
-                ResultSet resultSet = statement.executeQuery("select * from " + month + " LEFT join workers USING (id);");
-                while (resultSet.next()) {
-                    result.add(resultSet.getString(6));                                     /*Имя*/
-                    result.add(resultSet.getString(7));                                     /*Должность*/
-                    result.add(resultSet.getInt(2));                                        /*Рабочие дни*/
-                    result.add(resultSet.getDouble(3));                                     /*ЗП за дни*/
-                    result.add(resultSet.getDouble(4));                                     /*Вемя переработки*/
-                    result.add(resultSet.getDouble(5));                                     /*ЗП за переработку*/
-                    result.add(resultSet.getDouble(3) + resultSet.getDouble(5)); /*ЗП полная*/
+                ResultSet resultSet = statement.executeQuery("select * from " + month + " LEFT join workers USING " +
+                        "(id) ORDER BY workername;");
 
+                while (resultSet.next()) {
+                    Worker worker = new Worker(resultSet.getString(8), resultSet.getBoolean(9),
+                            resultSet.getDouble(10), resultSet.getDouble(11),
+                            resultSet.getDouble(12));
+                    worker.setWorkDays(resultSet.getInt(2));
+                    worker.setWorkHolydays(resultSet.getInt(3));
+                    worker.setWage(resultSet.getDouble(4));
+                    worker.setElaborTimes(resultSet.getDouble(5));
+                    worker.setWageElaborTime(resultSet.getDouble(6));
+                    worker.setFullWage(resultSet.getDouble(7));
+                    result.add(worker);
                 }
                 statement.close();
-
             }
         } catch (Exception e) {
             e.printStackTrace();
@@ -102,18 +108,19 @@ public class SQLSender implements ConnectTo {
         return result;
     }
 
-    public void insertMonthValue(ArrayList value, String month) {
+    public void insertMonthValue(Worker worker, String month) { //Добавление значений в месячную базу
         try {
             Class.forName("com.mysql.cj.jdbc.Driver").getDeclaredConstructor().newInstance();
             try (Connection conn = getConnection()) {
-                System.out.println("Соединение с базой установлено");
                 Statement statement = conn.createStatement();
                 statement.executeUpdate("SET FOREIGN_KEY_CHECKS = 0;");
-                statement.executeUpdate("INSERT INTO `" + month + "` (id, workdays, holydaystime, wage, elabordays, elaborwage) VALUES" +
-                        " (" + value.get(0) + ", " + value.get(1) + ", " + value.get(2) + ", " +
-                        "" + value.get(3) + ", " + value.get(4) + ", " + value.get(5) + ") ON DUPLICATE KEY UPDATE " +
-                        "workdays = " + value.get(1) + "workdays = " + value.get(2) + ", wage = " + value.get(3) + "," +
-                        " elabordays = " + value.get(4) + ", elaborwage = " + value.get(5) + ";");
+                statement.executeUpdate("INSERT INTO `" + month + "`(id, workdays, workholydays, wage, elabortime, " +
+                        "elaborwage, fullwage) VALUES (" + worker.getName().hashCode() + ", " + worker.getWorkDays() +
+                        ", " + worker.getWorkHolydays() + ", " +  worker.getWage() + ", " + worker.getElaborTimes() +
+                        ", " + worker.getWageElaborTime() +  ", " + worker.getFullWage() + ") ON DUPLICATE KEY UPDATE " +
+                        "workdays = " + worker.getWorkDays() + ", workholydays = " + worker.getWorkHolydays() +
+                        ", wage = " + worker.getWage() + ", elabortime = " + worker.getElaborTimes() +
+                        ", elaborwage = " + worker.getWageElaborTime() +  ", fullwage = " + worker.getFullWage() +";");
                 statement.close();
                 System.out.println("Данные за " + month + " внесены в таблицу успешно");
             } catch (Exception e) {
@@ -125,7 +132,7 @@ public class SQLSender implements ConnectTo {
     }
 
     @Override
-    public Connection getConnection() throws SQLException {
+    public Connection getConnection() throws SQLException {  //создание соединения с MySQL
 
         Properties props = new Properties();
         try (InputStream in = Files.newInputStream(Paths.get("src/main/resources/files/database.pr"))) {
@@ -139,7 +146,7 @@ public class SQLSender implements ConnectTo {
         return DriverManager.getConnection(url, username, password);
     }
 
-    public void createSchema() {
+    public void createSchema() { //создание схемы
         try {
             Class.forName("com.mysql.cj.jdbc.Driver").getDeclaredConstructor().newInstance();
             try (Connection conn = getConnection()) {
@@ -153,7 +160,7 @@ public class SQLSender implements ConnectTo {
         }
     }
 
-    public ArrayList selectAllWorkers() {
+    public ArrayList selectAllWorkers() { //Вывод всех сотрудников
         ArrayList workers = new ArrayList<>();
         try {
             Class.forName("com.mysql.cj.jdbc.Driver").getDeclaredConstructor().newInstance();

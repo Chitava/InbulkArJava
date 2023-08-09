@@ -222,7 +222,7 @@ public class Worker {
 
     @Override
     public String toString() {
-        return String.format("Работник - %s\nОтработал в этом месяце - %s д.\nИз них выходные - %s д. " +
+        return String.format("Работник - %s\nОтработал в этом месяце - %s д.\nИз них выходные и праздничные - %s д.\n" +
                              "Время переработки - %s ч.\nЗарплата за полные дни - %s р.\nЗарплата за переработку - %s р." +
                              "\nПолучен аванс - %s р.\nИтого за месяц с учетом аванса - %s р.", this.name,
                              this.getWorkDays(), this.getWorkHolydays(), this.getElaborTimes(), this.getWage(),
