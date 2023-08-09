@@ -1,25 +1,44 @@
 package workers;
 
-
 import methods.GetTime;
-
-import java.text.DecimalFormat;
 import java.time.DateTimeException;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
-import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 
 
 public class Worker {
     private String name;
     private boolean post;
-    private ArrayList monthStat;
-    private ArrayList workTimes;
+    private ArrayList monthStat = new ArrayList<>();
+    private ArrayList workTimes = new ArrayList<>();
     private double paymentPerDay;
     private double paymentPerHour;
     private double peymentForHollydays;
+
+    private int workDays = 0;
+
+    private int workHolydays =0;
+
+    private double elaborTimes = 0.0;
+
+    private double wage = 0.0;
+
+    private double wageElaborTime = 0.0;
+
+    private double prepayment = 0.0;
+
+    private double fullWage;
+
+    public Worker(String name, boolean post, double paymentPerDay,
+                  double paymentPerHour, double peymentForHollydays) {
+        this.name = name;
+        this.post = post;
+        this.paymentPerDay = paymentPerDay;
+        this.paymentPerHour = paymentPerHour;
+        this.peymentForHollydays = peymentForHollydays;
+        }
 
     public void setPost() {
         this.post = true;
@@ -39,81 +58,103 @@ public class Worker {
     public boolean getPost() {
         return post;
     }
-
     public static ArrayList<Worker> users = new ArrayList();
-
-    public Worker(String name, boolean post, double paymentPerDay, double paymentPerHour, double peymentForHollydays) {
-        this.name = name;
-        this.post = post;
-        this.paymentPerDay = paymentPerDay;
-        this.paymentPerHour = paymentPerHour;
-        this.monthStat = new ArrayList();
-        this.workTimes = new ArrayList();
-        this.peymentForHollydays = peymentForHollydays;
-    }
-
-    public String getName() {
+     public String getName() {
         return this.name;
     }
-
     public void setName(String name) {
         this.name = name;
     }
-
     public ArrayList getMonthStat() {
         return this.monthStat;
     }
-
     public void setMonthStat(String monthTime) {
         this.monthStat.add(monthTime);
     }
-
     public ArrayList getWorkTimes() {
         return this.workTimes;
     }
-
     public void setWorkTimes(String workTime) {
 
         this.workTimes.add(workTime);
     }
-
-    public static void addUser(Worker user) {
-        users.add(user);
-    }
-
+    public static void addUser(Worker user) {users.add(user);}
     public double getPaymentPerDay() {
         return paymentPerDay;
     }
-
     public void setPaymentPerDay(double paymentDay) {
         this.paymentPerDay = paymentDay;
     }
-
     public double getPaymentPerHour() {
         return paymentPerHour;
     }
-
     public void setPaymentPerHour(double paymentPerHour) {
         this.paymentPerHour = paymentPerHour;
     }
-
     public int getSize() {
         return this.monthStat.size();
     }
-
     public double getPeymentForHollydays() {
         return peymentForHollydays;
     }
-
     public void setPeymentForHollydays(double peymentForHollydays) {
         this.peymentForHollydays = peymentForHollydays;
     }
+    public boolean isPost() {
+        return post;
+    }
+    public void setPost(boolean post) {
+        this.post = post;
+    }
+    public int getWorkDays() {
+        return workDays;
+    }
+    public void setWorkDays(int workDays) {
+        this.workDays = workDays;
+    }
+    public int getWorkHolydays() {
+        return workHolydays;
+    }
+    public void setWorkHolydays(int workHolydays) {
+        this.workHolydays = workHolydays;
+    }
+    public double getElaborTimes() {
+        return elaborTimes;
+    }
+    public void setElaborTimes(double elaborTimes) {
+        this.elaborTimes = elaborTimes;
+    }
+    public double getWage() {
+        return wage;
+    }
+    public void setWage(double wage) {
+        this.wage = wage;
+    }
+    public double getWageElaborTime() {
+        return wageElaborTime;
+    }
 
-    public String monthStat(String month, ArrayList hollydays) {
+    public void setWageElaborTime(double wageElaborTime) {
+        this.wageElaborTime = wageElaborTime;
+    }
+    public double getPrepayment() {
+        return prepayment;
+    }
+    public void setPrepayment(double prepayment) {
+        this.prepayment = prepayment;
+    }
+    public double getFullWage() {
+        return fullWage;
+    }
+    public void setFullWage(double fullWage) {
+        this.fullWage = fullWage;
+    }
+    public void monthStat(String month, ArrayList hollydays) {
         int workDays = 0;
         int workHolydays = 0;
         LocalDateTime elaborTimes = LocalDateTime.of(1, 1, 1, 0, 0);
         LocalTime workTime = LocalTime.of(9, 0);
+        LocalTime workTimeHollidays = LocalTime.of(6, 0);
         double wageElabors = 0.0;
         double wage = 0.0;
         int year = Integer.parseInt(month.substring(month.indexOf("_") + 1, month.length()));
@@ -123,12 +164,12 @@ public class Worker {
             try{
             dayOfWeek = LocalDate.of(year, mon, i + 1);}
             catch (DateTimeException e){
-
                 throw new RuntimeException();
             }
             if (this.post) {
-                if (GetTime.getDayNumber(dayOfWeek) == 6 || GetTime.getDayNumber(dayOfWeek) == 7 || hollydays.contains(i+1)) {
-                    if (Double.valueOf(workTimes.get(i).toString()) > 6) {
+                if (GetTime.getDayNumber(dayOfWeek) == 6 || GetTime.getDayNumber(dayOfWeek) == 7 ||
+                        hollydays.contains(i+1)) {
+                    if (Double.valueOf(workTimes.get(i).toString()) > workTimeHollidays.getHour()) {
                         workDays++;
                         workHolydays++;
                         wage = wage + this.peymentForHollydays;
@@ -140,7 +181,7 @@ public class Worker {
                         wage = wage + this.peymentForHollydays;
                     }
                 }else{
-                    if (Double.valueOf(workTimes.get(i).toString()) > 9) {
+                    if (Double.valueOf(workTimes.get(i).toString()) > workTime.getHour()) {
                         workDays++;
                         wage = wage + this.paymentPerDay;
                         LocalDateTime elaborTime = GetTime.getElaborTime((String) workTimes.get(i), "9.0");
@@ -149,46 +190,45 @@ public class Worker {
                                 && Double.valueOf(workTimes.get(i).toString()) > 1) {
                         workDays++;
                         double paymentForHouer = this.paymentPerDay / 8;
-                        wage = wage + (GetTime.getTimeNotFullWorkDay(String.valueOf(workTimes.get(i))) * paymentForHouer);
+                        wage = wage + (GetTime.getTimeNotFullWorkDay(String.valueOf(workTimes.get(i)))
+                                * paymentForHouer);
                     }
                 }
             } else {
-                if (Double.valueOf(workTimes.get(i).toString()) > 9) {
+                if (Double.valueOf(workTimes.get(i).toString()) > workTime.getHour()) {
                     workDays++;
                     wage = wage + this.paymentPerDay;
                     LocalDateTime elaborTime = GetTime.getElaborTime((String) workTimes.get(i), "9.0");
                     elaborTimes = elaborTimes.plusHours(elaborTime.getHour()).plusMinutes(elaborTime.getMinute());
-                } else if (Double.valueOf(workTimes.get(i).toString()) <= 9
+                } else if (Double.valueOf(workTimes.get(i).toString()) <= workTime.getHour()
                             && Double.valueOf(workTimes.get(i).toString()) > 1) {
                     workDays++;
                     double paymentForHouer = this.paymentPerDay / 8;
                     wage = wage + (GetTime.getTimeNotFullWorkDay(String.valueOf(workTimes.get(i))) * paymentForHouer);
                 }
             }
-
         }
-        String elaborTime = (((elaborTimes.getDayOfMonth() - 1) * 24 + elaborTimes.getHour()) + "." + elaborTimes.getMinute());
-        wageElabors = wageElabors + Double.parseDouble(elaborTime) * this.paymentPerHour;
-        double fullWage = wage + wageElabors;
-        fullWage = Double.parseDouble(String.valueOf(fullWage));
-        setMonthStat(String.valueOf(workDays));
-        setMonthStat(String.valueOf(workHolydays));
-        setMonthStat(elaborTime);
-        setMonthStat(String.valueOf(wage).substring(0, String.valueOf(wage).indexOf(".") + 2));
-        setMonthStat(String.valueOf(wageElabors).substring(0, String.valueOf(wageElabors).indexOf(".") + 2));
-        setMonthStat(String.valueOf(fullWage).substring(0, String.valueOf(fullWage).indexOf(".") + 2));
-        return String.format("Сутрудник %s\nОтработал в этом месяце - %s дней\nИз них выходных и праздников - %s\nЗаработал - %s р.\n" +
-                        "Переработка составила - %s ч.\nЗарплата за переработку - %s р.\nИтого за месяц - %s р.", this.name,
-                this.monthStat.get(0), this.monthStat.get(1), this.monthStat.get(3), this.monthStat.get(2),
-                this.monthStat.get(4), this.monthStat.get(5));
-
+        String elaborTime = (((elaborTimes.getDayOfMonth() - 1) * 24 + elaborTimes.getHour()) + "."
+                + elaborTimes.getMinute());
+        setWorkDays(Integer.parseInt(String.valueOf(workDays)));
+        setWorkHolydays(workHolydays);
+        setElaborTimes(Double.parseDouble(elaborTime));
+        setWage(wage);
+        setWageElaborTime(wageElabors + Double.parseDouble(elaborTime) * this.paymentPerHour);
+//        setPrepayment(10000);
+        double fullWage = this.getWage() + this.getWageElaborTime()- this.getPrepayment();
+        setFullWage(Double.parseDouble(String.valueOf(fullWage)));
     }
 
     @Override
     public String toString() {
-        return String.format("Работник - %s\nдолжность - %s\nРазмер оплаты работы за день - %s р.\nРазмер почасовой оплаты " +
-                "переработки - %s р.", this.name, this.post, this.paymentPerDay, this.paymentPerHour);
+        return String.format("Работник - %s\nОтработал в этом месяце - %s д.\nИз них выходные - %s д. " +
+                             "Время переработки - %s ч.\nЗарплата за полные дни - %s р.\nЗарплата за переработку - %s р." +
+                             "\nПолучен аванс - %s р.\nИтого за месяц с учетом аванса - %s р.", this.name,
+                             this.getWorkDays(), this.getWorkHolydays(), this.getElaborTimes(), this.getWage(),
+                             this.getWageElaborTime(), getPrepayment(), this.getFullWage());
     }
+
 
 
 }

@@ -33,7 +33,6 @@ public class SQLSender implements ConnectTo {
         }
     }
 
-
     public void createWorkerDB() {
         try {
             Class.forName("com.mysql.cj.jdbc.Driver").getDeclaredConstructor().newInstance();
@@ -43,7 +42,9 @@ public class SQLSender implements ConnectTo {
                         "(id VARCHAR(100) PRIMARY KEY," +
                         "name VARCHAR(255) NOT NULL," +
                         "post BOOLEAN DEFAULT false," +
-                        "doublesalary DOUBLE);");
+                        "paymentPerDay DOUBLE," +
+                        "paymentPerHour DOUBLE," +
+                        "peymentForHollydays DOUBLE);");
                 statement.close();
                 System.out.println("Таблица сотрудников создана успешно");
             }
@@ -60,10 +61,11 @@ public class SQLSender implements ConnectTo {
                 statement.executeUpdate("CREATE TABLE IF NOT EXISTS `" + month + "` " +
                         "(id VARCHAR(100) PRIMARY KEY UNIQUE, " +
                         "workdays INT, " +
-                        "holydaystime INT, " +
+                        "workholydays INT, " +
                         "wage DOUBLE, " +
-                        "elabordays INT, " +
+                        "elabortime INT, " +
                         "elaborwage DOUBLE, " +
+                        "fullwage DOUBLE" +
                         "FOREIGN KEY (id) " +
                         "REFERENCES workers (id));");
                 statement.close();
@@ -74,7 +76,7 @@ public class SQLSender implements ConnectTo {
         }
     }
 
-    public ArrayList selectAll(String month) {
+    public ArrayList selectAllWorkersWithMonthStat(String month) {
         ArrayList result = new ArrayList<>();
         try {
             Class.forName("com.mysql.cj.jdbc.Driver").getDeclaredConstructor().newInstance();
@@ -136,5 +138,41 @@ public class SQLSender implements ConnectTo {
         String password = props.getProperty("password");
         return DriverManager.getConnection(url, username, password);
     }
+
+    public void createSchema() {
+        try {
+            Class.forName("com.mysql.cj.jdbc.Driver").getDeclaredConstructor().newInstance();
+            try (Connection conn = getConnection()) {
+                Statement statement = conn.createStatement();
+                statement.executeUpdate("CREATE SCHEMA IF NOT EXISTS `Inbulk`;");
+                statement.close();
+                System.out.println("База Inbulk создана успешно");
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    public ArrayList selectAllWorkers() {
+        ArrayList workers = new ArrayList<>();
+        try {
+            Class.forName("com.mysql.cj.jdbc.Driver").getDeclaredConstructor().newInstance();
+            try (Connection conn = getConnection()) {
+                Statement statement = conn.createStatement();
+                ResultSet resultSet = statement.executeQuery("select * from workers;");
+                while (resultSet.next()) {
+                    Worker worker = new Worker(resultSet.getString(2), resultSet.getBoolean(3),
+                            resultSet.getDouble(4), resultSet.getDouble(5),
+                            resultSet.getDouble(6));
+                    workers.add(worker);
+                }
+                statement.close();
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return workers;
+    }
+
 }
 

@@ -21,12 +21,12 @@ public class GetTime {
             XSSFWorkbook wb = new XSSFWorkbook(stream);
             XSSFSheet sheet = wb.getSheetAt(0);
             Iterator<Row> itr = sheet.iterator();
-            Worker user = null;
+            Worker worker = null;
             while (itr.hasNext()) {
                 Row row = itr.next();
                 int lenRow = 0;
                 if (row.getRowNum() % 2 == 0) {
-                    user = null;
+                    worker = null;
                     lenRow = 18;
                 } else {
                     lenRow = 19;
@@ -37,14 +37,14 @@ public class GetTime {
                     String value = cell.getStringCellValue();
                     try {
                         Integer.parseInt(value);
-                        user = new Worker(cellIterator.next().getStringCellValue().replace(" ", "")
-                                .replace("\n", " "), true, 1500.00,
+                        worker = new Worker(cellIterator.next().getStringCellValue().replace(" ", "")
+                                .replace("\n", " "), false, 1500.00,
                                 200.00, 3000.00);
-                        Worker.addUser(user);
+                        Worker.addUser(worker);
                     } catch (NumberFormatException e) {
                         if (!value.isBlank()) {
                             if (value.contains(":") || value.contains("--")) {
-                                if (value.contains("--\n--\n--")) user.setWorkTimes("0");
+                                if (value.contains("--\n--\n--")) worker.setWorkTimes("0");
                                 else {
                                     String[] tempTime = value.split("\n");
                                     for (int j = 0; j < tempTime.length; j++) {
@@ -68,11 +68,11 @@ public class GetTime {
                                             LocalTime time2 = LocalTime.of(houer2, minute2);
                                             LocalTime total = time1.minusHours(time2.getHour())
                                                     .minusMinutes(time2.getMinute());
-                                            user.setWorkTimes(String.valueOf(total).replace(":", ".")
+                                            worker.setWorkTimes(String.valueOf(total).replace(":", ".")
                                                     .replace("00", "0"));
                                         }
                                     } else {
-                                        user.setWorkTimes(tempTime[2]);
+                                        worker.setWorkTimes(tempTime[2]);
                                     }
                                 }
                             }
