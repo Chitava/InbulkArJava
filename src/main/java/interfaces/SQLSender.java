@@ -59,6 +59,7 @@ public class SQLSender implements ConnectTo {
     public void createMonthDB(String month) {  //создание базы месячной статистики
         try {
             Class.forName("com.mysql.cj.jdbc.Driver").getDeclaredConstructor().newInstance();
+
             try (Connection conn = getConnection()) {
                 Statement statement = conn.createStatement();
                 statement.executeUpdate("CREATE TABLE IF NOT EXISTS `" + month + "` " +
@@ -109,6 +110,8 @@ public class SQLSender implements ConnectTo {
     }
 
     public void insertMonthValue(Worker worker, String month) { //Добавление значений в месячную базу
+        deleteTable(month);
+        createMonthDB(month);
         try {
             Class.forName("com.mysql.cj.jdbc.Driver").getDeclaredConstructor().newInstance();
             try (Connection conn = getConnection()) {
@@ -180,6 +183,21 @@ public class SQLSender implements ConnectTo {
         }
         return workers;
     }
+    public void deleteTable (String name){
+        try {
+            Class.forName("com.mysql.cj.jdbc.Driver").getDeclaredConstructor().newInstance();
+            try (Connection conn = getConnection()) {
+                Statement statement = conn.createStatement();
+                statement.executeUpdate("DROP TABLES " + name +";");
 
+                statement.close();
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+
+
+    }
 }
 
