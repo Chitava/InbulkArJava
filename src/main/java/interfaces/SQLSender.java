@@ -228,10 +228,23 @@ public class SQLSender implements ConnectTo {
             throw new RuntimeException(e);
         }
         return worker;
-
-
-
     }
+
+    public void deleteWorker(String name) {  //Удаление таблицы
+        try {
+            Class.forName("com.mysql.cj.jdbc.Driver").getDeclaredConstructor().newInstance();
+            try (Connection conn = getConnection()) {
+                Statement statement = conn.createStatement();
+                statement.executeUpdate("SET FOREIGN_KEY_CHECKS = 0;");
+                statement.executeUpdate("DELETE FROM workers WHERE workername = '" + name + "';");
+                statement.close();
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+
 }
 
 
