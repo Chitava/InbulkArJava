@@ -244,6 +244,37 @@ public class SQLSender implements ConnectTo {
         }
     }
 
+    public void editWorker(String name, Boolean post, String paymentPerDay, String paymentPerHour,
+                           String peymentForHollydays) {  //Редактирование сотрудника
+        Worker worker = selectWorker(name);
+        if (paymentPerDay == null){
+            paymentPerDay = String.valueOf(worker.getPaymentPerDay());
+        }
+        if (paymentPerHour == null){
+            paymentPerHour = String.valueOf(worker.getPaymentPerHour());
+        }
+        if (peymentForHollydays == null){
+            paymentPerHour = String.valueOf(worker.getPeymentForHollydays());
+        }
+
+        try {
+            Class.forName("com.mysql.cj.jdbc.Driver").getDeclaredConstructor().newInstance();
+            try (Connection conn = getConnection()) {
+                Statement statement = conn.createStatement();
+                System.out.println("UPDATE workers SET post = " + post + "paymentPerDay = "
+                        + Double.parseDouble(paymentPerDay) + ",  paymentPerHour = "
+                        + Double.parseDouble(paymentPerHour) + ", peymentForHollydays = " +
+                        "" + Double.parseDouble(paymentPerHour) + " WHERE workername = '" + name + "';");
+                statement.executeUpdate("UPDATE workers SET post = " + post + ", paymentPerDay = "
+                        + Double.parseDouble(paymentPerDay) + ",  paymentPerHour = "
+                        + Double.parseDouble(paymentPerHour) + ", peymentForHollydays = " +
+                        "" + Double.parseDouble(peymentForHollydays) + " WHERE workername = '" + name + "';");
+                statement.close();
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
 
 }
 
