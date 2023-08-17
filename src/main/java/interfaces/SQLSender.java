@@ -261,10 +261,6 @@ public class SQLSender implements ConnectTo {
             Class.forName("com.mysql.cj.jdbc.Driver").getDeclaredConstructor().newInstance();
             try (Connection conn = getConnection()) {
                 Statement statement = conn.createStatement();
-                System.out.println("UPDATE workers SET post = " + post + "paymentPerDay = "
-                        + Double.parseDouble(paymentPerDay) + ",  paymentPerHour = "
-                        + Double.parseDouble(paymentPerHour) + ", peymentForHollydays = " +
-                        "" + Double.parseDouble(paymentPerHour) + " WHERE workername = '" + name + "';");
                 statement.executeUpdate("UPDATE workers SET post = " + post + ", paymentPerDay = "
                         + Double.parseDouble(paymentPerDay) + ",  paymentPerHour = "
                         + Double.parseDouble(paymentPerHour) + ", peymentForHollydays = " +

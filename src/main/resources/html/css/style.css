@@ -1,14 +1,19 @@
-.header{
-   
-    
+body {
+    background-color: #e7eee8;
 }
+.header{
+    background-color: rgb(236, 243, 243);
+    border-radius: 10px;
+    margin-top: 15px;
+}
+
 .workfield{
-    margin-top: 1%;
+    margin-top: 10px;
     display: flex;
     flex-wrap: nowrap;
     justify-content: center;
     flex-direction: row;
-    
+    height: 87vh;
 }
 
 .emblem {
@@ -16,29 +21,41 @@
     padding: 10px 22px;
 }
 
-.menu{
-    
-    width: 17%;
+.menu{    
+    width: 17vw;
     display: flex;
     flex-direction: column;
     flex-wrap: nowrap;
     padding: 10px;
+    background-color: rgb(233, 241, 241);;
+    border-radius: 10px;
+ 
+    
 }
 
-.resultfield{
-    
-    width: 63%;
+.resultfield{    
+    width: 63vw;
     display: flex;
     flex-direction: column;
     flex-wrap: nowrap;
+    height: 87vh;
+    border-radius: 10px;
+    margin: 0px 10px;
+    background-color: rgb(233, 241, 241);
+
+    
+    
 }
 
-.workersmenu{
-    
-    width: 20%;
+.workersmenu{    
+    width: 20vw;
     display: flex;
     flex-direction: column;
     flex-wrap: nowrap;
+    height: 87vh;
+    background-color: rgb(233, 241, 241);
+    border-radius: 10px;
+    
 }
 
 .button {
@@ -57,4 +74,5 @@
   } 
   .button:hover { background: linear-gradient(#f5ae00, #f59500) #f5ae00; }
   .button:active { background: linear-gradient(#f59500, #f5ae00) #f59500; }
-    
+  
+  

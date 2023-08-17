@@ -9,17 +9,19 @@ import workers.Worker;
 
 public class main {
     public static void main(String[] args) throws IOException {
+        SQLSender sql = new SQLSender();
+        sql.editWorker("АрстаналыКызы Гуласел", true, "1500", "300", "3000");
         ArrayList<Worker> workers = GetTime.setUser("src/main/resources/files/2.xlsx");
         ArrayList hollydays = new ArrayList<>();
         hollydays.add(1);
         hollydays.add(2);
         hollydays.add(3);
         hollydays.add(4);
-        hollydays.add(7);
-        SQLSender sql = new SQLSender();
+
+
 //        sql.createWorkerDB();
 //        sql.createMonthDB("07_2023");
-//        sql.editWorker("АрстаналыКызы Гуласел", false, "1500", "300", "0");
+        sql.editWorker("АрстаналыКызы Гуласел", true, "1500", "300", "0");
         for (Worker worker : Worker.users) {
             sql.insertWorker(worker);
             worker.monthStat("07_2023", hollydays);
