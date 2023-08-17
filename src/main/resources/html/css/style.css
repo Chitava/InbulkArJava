@@ -1,6 +1,7 @@
 body {
     background-color: #e7eee8;
 }
+
 .header{
     background-color: rgb(236, 243, 243);
     border-radius: 10px;
@@ -28,9 +29,7 @@ body {
     flex-wrap: nowrap;
     padding: 10px;
     background-color: rgb(233, 241, 241);;
-    border-radius: 10px;
- 
-    
+    border-radius: 10px
 }
 
 .resultfield{    
@@ -42,9 +41,6 @@ body {
     border-radius: 10px;
     margin: 0px 10px;
     background-color: rgb(233, 241, 241);
-
-    
-    
 }
 
 .workersmenu{    
@@ -55,7 +51,6 @@ body {
     height: 87vh;
     background-color: rgb(233, 241, 241);
     border-radius: 10px;
-    
 }
 
 .button {
@@ -71,8 +66,14 @@ body {
     background: linear-gradient(#e27f29, #f78b2d) #e27f29;
     transition: 0.2s;
     margin: 10px;
-  } 
-  .button:hover { background: linear-gradient(#f5ae00, #f59500) #f5ae00; }
-  .button:active { background: linear-gradient(#f59500, #f5ae00) #f59500; }
+} 
+  
+.button:hover { 
+    background: linear-gradient(#f5ae00, #f59500) #f5ae00; 
+}
+
+.button:active {
+    background: linear-gradient(#f59500, #f5ae00) #f59500; 
+}
   
   
