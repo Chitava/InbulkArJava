@@ -1,6 +1,6 @@
 package methods;
 import java.util.Scanner;
-import interfaces.SQLSender;
+
 import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.xssf.usermodel.XSSFSheet;

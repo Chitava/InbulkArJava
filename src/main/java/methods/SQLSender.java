@@ -1,5 +1,6 @@
-package interfaces;
+package methods;
 
+import interfaces.ConnectTo;
 import workers.Worker;
 
 import java.io.InputStream;
