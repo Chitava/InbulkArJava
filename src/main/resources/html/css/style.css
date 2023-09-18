@@ -8,14 +8,13 @@ body {
     background-color: #e7eee8;
 }
 
-.header{
+header{
     background-color: rgb(236, 243, 243);
     border-radius: 10px;
     margin-top: 15px;
 }
 
 .workfield{
-   
     margin-top: 10px;
     display: flex;
     flex-wrap: nowrap;
@@ -39,7 +38,8 @@ body {
     border-radius: 10px
 }
 
-.resultfield{    
+.resultfield{
+    text-align: center;
     width: 63vw;
     display: flex;
     flex-direction: column;
@@ -50,8 +50,15 @@ body {
     background-color: rgb(233, 241, 241);
 }
 
+.resultfield h1{
+    margin-top: 100px;
+    font-size: 80px;
+    color: #e27f29;;
+    
+    
+}
+
 .workersmenu{
-    overflow: scroll;    
     width: 20vw;
     display: flex;
     flex-direction: column;
@@ -60,6 +67,10 @@ body {
     height: 87vh;
     background-color: rgb(233, 241, 241);
     border-radius: 10px;
+}
+
+.scroll{
+    overflow-y: scroll;
 }
 
 .button {
