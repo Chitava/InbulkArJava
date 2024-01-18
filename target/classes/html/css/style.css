@@ -1,8 +1,14 @@
+* {
+    margin: 0;
+    padding: 0;
+    text-decoration: none;
+}
+
 body {
     background-color: #e7eee8;
 }
 
-.header{
+header{
     background-color: rgb(236, 243, 243);
     border-radius: 10px;
     margin-top: 15px;
@@ -32,7 +38,8 @@ body {
     border-radius: 10px
 }
 
-.resultfield{    
+.resultfield{
+    text-align: center;
     width: 63vw;
     display: flex;
     flex-direction: column;
@@ -43,20 +50,38 @@ body {
     background-color: rgb(233, 241, 241);
 }
 
-.workersmenu{    
+.resultfield h1{
+    margin: 30px 10px 50px;
+    font-size: 30px;
+    color: #e27f29;
+}
+
+.date{
+    width: 200px;
+    text-align: center;
+    font-size: 18px;
+    margin: 15px auto; 
+}
+
+
+.workersmenu{
     width: 20vw;
     display: flex;
     flex-direction: column;
     flex-wrap: nowrap;
+    align-items: center;
     height: 87vh;
     background-color: rgb(233, 241, 241);
     border-radius: 10px;
 }
 
+.scroll{
+    overflow-y: scroll;
+}
+
 .button {
     display: inline-block;
     color: white;
-    text-decoration: none;
     padding: .5em 2em;
     outline: none;
     border-width: 2px 0;
@@ -66,7 +91,13 @@ body {
     background: linear-gradient(#e27f29, #f78b2d) #e27f29;
     transition: 0.2s;
     margin: 10px;
-} 
+}
+
+.width{
+    width: 200px;
+    margin-left: auto;
+    margin-right: auto;
+}
   
 .button:hover { 
     background: linear-gradient(#f5ae00, #f59500) #f5ae00; 
@@ -77,3 +108,32 @@ body {
 }
   
   
+.worker__button {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 250px;
+    height: 20px;
+   
+}
+
+.worker__name{
+    margin-bottom: 10px;
+}
+.worker__info{
+    display: none;
+    flex-direction: column;
+    align-items: left;
+}
+
+.worker__inf{
+    display: flex;
+}
+
+.worker__button:hover {
+    height: 100px;
+}
+
+.worker__button:hover .worker__info {
+    display: flex;
+}

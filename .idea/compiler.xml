@@ -6,9 +6,10 @@
         <sourceOutputDir name="target/generated-sources/annotations" />
         <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
         <outputRelativeToContentRoot value="true" />
+        <module name="InbulkAR" />
+        <module name="ARJava" />
         <module name="InbulkArJava" />
         <module name="InbulkJava" />
-        <module name="ARJava" />
       </profile>
     </annotationProcessing>
   </component>

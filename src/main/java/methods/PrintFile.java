@@ -12,7 +12,7 @@ public class PrintFile {
         for (Worker worker : workers) {
             toprint.append(worker.toString());
             toprint.append('\n');
-            toprint.append("----------------------------------------------------");
+            toprint.append("----------------------------------------------------------------");
             toprint.append('\n');
         }
         JTextPane jtp = new JTextPane();

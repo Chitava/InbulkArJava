@@ -9,6 +9,7 @@ import java.util.ArrayList;
 
 
 public class Worker {
+    //region Поля
     private String name;
     private boolean post;
     private ArrayList monthStat = new ArrayList<>();
@@ -16,21 +17,17 @@ public class Worker {
     private double paymentPerDay;
     private double paymentPerHour;
     private double peymentForHollydays;
-
     private int workDays = 0;
-
     private int workHolydays =0;
-
     private double elaborTimes = 0.0;
-
     private double wage = 0.0;
-
     private double wageElaborTime = 0.0;
-
     private double prepayment = 0.0;
-
     private double fullWage;
+    //endregion
 
+
+    //region Конструкторы
     public Worker(String name, boolean post, double paymentPerDay,
                   double paymentPerHour, double peymentForHollydays) {
         this.name = name;
@@ -40,6 +37,13 @@ public class Worker {
         this.peymentForHollydays = peymentForHollydays;
         }
 
+    public Worker() {
+    }
+
+
+    //endregion
+
+    //region Getters Setters
     public void setPost() {
         this.post = true;
     }
@@ -74,10 +78,7 @@ public class Worker {
     public ArrayList getWorkTimes() {
         return this.workTimes;
     }
-    public void setWorkTimes(String workTime) {
-
-        this.workTimes.add(workTime);
-    }
+    public void setWorkTimes(String workTime) {this.workTimes.add(workTime);}
     public static void addUser(Worker user) {users.add(user);}
     public double getPaymentPerDay() {
         return paymentPerDay;
@@ -133,7 +134,6 @@ public class Worker {
     public double getWageElaborTime() {
         return wageElaborTime;
     }
-
     public void setWageElaborTime(double wageElaborTime) {
         this.wageElaborTime = wageElaborTime;
     }
@@ -149,6 +149,11 @@ public class Worker {
     public void setFullWage(double fullWage) {
         this.fullWage = fullWage;
     }
+
+//endregion
+
+
+
     public void monthStat(String month, ArrayList hollydays) {
         int workDays = 0;
         int workHolydays = 0;
@@ -220,6 +225,8 @@ public class Worker {
         setFullWage(Double.parseDouble(String.valueOf(fullWage)));
     }
 
+
+    //region перегрузки
     @Override
     public String toString() {
         return String.format("Работник - %s\nОтработал в этом месяце - %s д.\nИз них выходные и праздничные - %s д.\n" +
@@ -229,7 +236,7 @@ public class Worker {
                              String.format("%.2f",this.getWageElaborTime()), getPrepayment(), Math.round(this.getFullWage()));
     }
 
-
+    //endregion
 
 }
 

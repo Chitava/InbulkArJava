@@ -9,9 +9,25 @@ body {
 }
 
 header{
+    display: flex;
+    flex-direction: row;
+    gap: 1230px;
     background-color: rgb(236, 243, 243);
     border-radius: 10px;
     margin-top: 15px;
+}
+
+.work_date{
+    display: flex;
+    font-size: 20px;
+    align-items: center;
+    gap: 20px;
+
+}
+
+#work_date{
+    font-size: 28px;
+    color: #e27f29;
 }
 
 .workfield{
@@ -62,6 +78,7 @@ header{
     font-size: 18px;
     margin: 15px auto; 
 }
+
 
 .workersmenu{
     width: 20vw;
