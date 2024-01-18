@@ -78,6 +78,7 @@ header{
     border-radius: 10px;
     margin: 0px 10px;
     background-color: rgb(233, 241, 241);
+    overflow-y: auto;
 }
 
 .resultfield h1{
@@ -104,11 +105,10 @@ header{
     height: 87vh;
     background-color: rgb(233, 241, 241);
     border-radius: 10px;
+    overflow-y: auto;
 }
 
-.scroll{
-    overflow-y: scroll;
-}
+
 
 .button {
     display: inline-block;
