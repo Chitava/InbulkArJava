@@ -1,17 +1,31 @@
+@font-face {
+	font-family:'Comforta';
+	src: url('../fonts/Comfortaa.ttf');
+}
+
+@font-face {
+	font-family:'Ubuntu';
+	src: url('../fonts/Ubuntu.ttf');
+}
+
+
+
+
 * {
     margin: 0;
     padding: 0;
     text-decoration: none;
+    font-family: 'Ubuntu';
 }
 
-body {
+body {   
     background-color: #e7eee8;
 }
 
 header{
     display: flex;
     flex-direction: row;
-    gap: 1230px;
+    gap: 1190px;
     background-color: rgb(236, 243, 243);
     border-radius: 10px;
     margin-top: 15px;
@@ -37,6 +51,7 @@ header{
     justify-content: center;
     flex-direction: row;
     height: 87vh;
+    font-family: 'Comforta';
 }
 
 .emblem {
@@ -45,7 +60,8 @@ header{
 }
 
 .menu{    
-    width: 17vw;
+    width: 380px;
+
     display: flex;
     flex-direction: column;
     flex-wrap: nowrap;
@@ -70,6 +86,7 @@ header{
     margin: 30px 10px 50px;
     font-size: 30px;
     color: #e27f29;
+    font-family: 'Comforta';
 }
 
 .date{
@@ -97,6 +114,7 @@ header{
 
 .button {
     display: inline-block;
+    font-family: 'Comforta';
     color: white;
     padding: .5em 2em;
     outline: none;
