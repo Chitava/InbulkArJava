@@ -48,9 +48,9 @@ header{
     margin-top: 10px;
     display: flex;
     flex-wrap: nowrap;
-    justify-content: center;
+    justify-content: space-between;
     flex-direction: row;
-    height: 87vh;
+    height: 100;
     font-family: 'Comforta';
 }
 
@@ -61,7 +61,6 @@ header{
 
 .menu{    
     width: 380px;
-
     display: flex;
     flex-direction: column;
     flex-wrap: nowrap;
@@ -72,7 +71,7 @@ header{
 
 .resultfield{
     text-align: center;
-    width: 63vw;
+    
     display: flex;
     flex-direction: column;
     flex-wrap: nowrap;
@@ -98,7 +97,7 @@ header{
 
 
 .workersmenu{
-    width: 20vw;
+    width: 380px;
     display: flex;
     flex-direction: column;
     flex-wrap: nowrap;
